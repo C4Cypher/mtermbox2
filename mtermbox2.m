@@ -30,3 +30,14 @@
 % Main author:   C4Cypher
 % Maintained by: C4Cypher
 % Stability:     Low
+% 
+% TODO Write a short summary for here and the Github readme
+%
+%---------------------------------------------------------------------------%
+%---------------------------------------------------------------------------%
+
+:- module mtermbox2.
+:- interface.
+
+:- implementation.
+
