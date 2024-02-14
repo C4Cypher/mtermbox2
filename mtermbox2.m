@@ -36,11 +36,72 @@
 % to include. I intend to implement a single module for this, following the 
 % single header intent of the termbox2 library itself.
 %
+% I'll try to keep things documented, either with my intent, or with comments
+% from the original header. 
+%
+%---------------------------------------------------------------------------%
+%
+% Naming conventions:
+%
+% Direct one to one calls will have the tb prefix wheras my addditions will
+% use the mtb prefix
+%
 %---------------------------------------------------------------------------%
 %---------------------------------------------------------------------------%
 
 :- module mtermbox2.
 :- interface.
+
+:- import_module io.
+:- import_module string.
+
+/* Initializes the termbox library. This function should be called before any
+ * other functions. tb_init() is equivalent to tb_init_file("/dev/tty"). After
+ * successful initialization, the library must be finalized using the
+ * tb_shutdown() function.
+ */
+ 
+ 
+	% int tb_init(void);
+:- pred tb_init(io::di, io::uo) is det.
+
+	% int tb_init_file(const char *path);
+:- pred tb_init_file(string::in, io::di, io::uo) is det.
+
+	% int tb_init_fd(int ttyfd);
+:- pred tb_init_fd(int::in, io::di, io::uo) is det.
+
+	% int tb_init_rwfd(int rfd, int wfd);
+:- pred tb_init_rwfd(int::in, int::in, io::di, io::uo) is det.
+
+	% int tb_shutdown(void);
+:- pred tb_shutdown(io::di, io::uo) is det.
+
+/* Returns the size of the internal back buffer (which is the same as terminal's
+ * window size in rows and columns). The internal buffer can be resized after
+ * tb_clear() or tb_present() function calls. Both dimensions have an
+ * unspecified negative value when called before tb_init() or after
+ * tb_shutdown().
+ */
+ 
+	% int tb_width(void);
+:- pred tb_width(int::out, io::di, io::uo) is det.
+:- func tb_width(io::di, io::uo) = int::out is det.
+
+	% int tb_height(void);
+:- pred tb_height(int::out, io::di, io::uo) is det.
+:- func tb_height(io::di, io::uo) = int::out is det.
+
+/* Clears the internal back buffer using TB_DEFAULT color or the
+ * color/attributes set by tb_set_clear_attrs() function.
+ */
+ 
+ 
+	% int tb_clear(void);
+:- pred tb_clear(io::di, io::uo) is det.
+
+	% int tb_set_clear_attrs(uintattr_t fg, uintattr_t bg);
+:- pred tb_set_clear_attrs(uint::in, uint::in, io::di, io::uo) is det.
 
 :- implementation.
 
