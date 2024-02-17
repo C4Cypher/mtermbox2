@@ -62,9 +62,83 @@
 
 /* ASCII key constants (tb_event.key) */
 :- func tb_key_ctrl_tilde = uint16.
-:- func tb_key_ctrl_2 = uint16.
+:- func tb_key_ctrl_2 = uint16. /* clash with 'ctrl_tilde'     */
 :- func tb_key_ctrl_a = uint16.
 :- func tb_key_ctrl_b = uint16.
+:- func tb_key_ctrl_c = uint16.
+:- func tb_key_ctrl_d = uint16.
+:- func tb_key_ctrl_e = uint16.
+:- func tb_key_ctrl_f = uint16.
+:- func tb_key_ctrl_g = uint16.
+:- func tb_key_backspace = uint16.
+:- func tb_key_ctrl_h = uint16. /* clash with 'ctrl_backspace' */
+:- func tb_key_tab = uint16.
+:- func tb_key_ctrl_i = uint16. /* clash with 'tab'            */
+:- func tb_key_ctrl_j = uint16.
+:- func tb_key_ctrl_k = uint16.
+:- func tb_key_ctrl_l = uint16.
+:- func tb_key_enter = uint16.
+:- func tb_key_ctrl_m = uint16. /* clash with 'enter'          */
+:- func tb_key_ctrl_n = uint16.
+:- func tb_key_ctrl_o = uint16.
+:- func tb_key_ctrl_p = uint16.
+:- func tb_key_ctrl_q = uint16.
+:- func tb_key_ctrl_r = uint16.
+:- func tb_key_ctrl_s = uint16.
+:- func tb_key_ctrl_t = uint16.
+:- func tb_key_ctrl_u = uint16.
+:- func tb_key_ctrl_v = uint16.
+:- func tb_key_ctrl_w = uint16.
+:- func tb_key_ctrl_x = uint16.
+:- func tb_key_ctrl_y = uint16.
+:- func tb_key_ctrl_z = uint16.
+:- func tb_key_esc = uint16.
+:- func tb_key_ctrl_lsq_bracket = uint16. /* clash with 'esc'            */
+:- func tb_key_ctrl_3 = uint16. /* clash with 'esc'            */
+:- func tb_key_ctrl_4 = uint16.
+:- func tb_key_ctrl_backslash = uint16. /* clash with 'ctrl_4'         */
+:- func tb_key_ctrl_5 = uint16.
+:- func tb_key_ctrl_rsq_bracket = uint16. /* clash with 'ctrl_5'         */
+:- func tb_key_ctrl_6 = uint16.
+:- func tb_key_ctrl_7 = uint16.
+:- func tb_key_ctrl_slash = uint16. /* clash with 'ctrl_7'         */
+:- func tb_key_ctrl_underscore = uint16. /* clash with 'ctrl_7'         */
+:- func tb_key_space = uint16.
+:- func tb_key_backspace2 = uint16.
+:- func tb_key_ctrl_8 = uint16. /* clash with 'backspace2'     */
+
+:- func tb_key_i(int) = uint16.
+/* terminal-dependent key constants (tb_event.key) and terminfo capabilities */
+
+:- func tb_key_f1 = uint16.
+:- func tb_key_f2 = uint16.
+:- func tb_key_f3 = uint16.
+:- func tb_key_f4 = uint16.
+:- func tb_key_f5 = uint16.
+:- func tb_key_f6 = uint16.
+:- func tb_key_f7 = uint16.
+:- func tb_key_f8 = uint16.
+:- func tb_key_f9 = uint16.
+:- func tb_key_f10 = uint16.
+:- func tb_key_f11 = uint16.
+:- func tb_key_f12 = uint16.
+:- func tb_key_insert = uint16.
+:- func tb_key_delete = uint16.
+:- func tb_key_home = uint16.
+:- func tb_key_end = uint16.
+:- func tb_key_pgup = uint16.
+:- func tb_key_pgdn = uint16.
+:- func tb_key_arrow_up = uint16.
+:- func tb_key_arrow_down = uint16.
+:- func tb_key_arrow_left = uint16.
+:- func tb_key_arrow_right = uint16.
+:- func tb_key_back_tab = uint16.
+:- func tb_key_mouse_left = uint16.
+:- func tb_key_mouse_right = uint16.
+:- func tb_key_mouse_middle = uint16.
+:- func tb_key_mouse_release = uint16.
+:- func tb_key_mouse_wheel_up = uint16.
+:- func tb_key_mouse_wheel_down = uint16.
 
 
 /* Initializes the termbox library. This function should be called before any
