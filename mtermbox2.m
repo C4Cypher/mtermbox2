@@ -353,15 +353,6 @@
 :- func x(tb_event) = uint32. /* mouse x */
 :- func y(tb_event) = uint32. /* mouse y */
 
-:- func 'type :='(tb_event, uint8) = tb_event.
-:- func 'mod :='(tb_event, uint8) = tb_event. 
-:- func 'key :='(tb_event, uint16) = tb_event. 
-:- func 'ch :='(tb_event, uint32) = tb_event. 
-:- func 'w :='(tb_event, uint32) = tb_event. 
-:- func 'h :='(tb_event, uint32) = tb_event. 
-:- func 'x :='(tb_event, uint32) = tb_event. 
-:- func 'y :='(tb_event, uint32) = tb_event. 
-
 
 /* Wait for an event up to timeout_ms milliseconds and fill the event structure
  * with it. If no event is available within the timeout period, TB_ERR_NO_EVENT
