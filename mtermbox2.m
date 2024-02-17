@@ -55,8 +55,17 @@
 
 :- import_module io.
 :- import_module string.
+:- import_module bool.
 :- import_module uint.
+:- import_module uint16.
 :- import_module uint32.
+
+/* ASCII key constants (tb_event.key) */
+:- func tb_key_ctrl_tilde = uint16.
+:- func tb_key_ctrl_2 = uint16.
+:- func tb_key_ctrl_a = uint16.
+:- func tb_key_ctrl_b = uint16.
+
 
 /* Initializes the termbox library. This function should be called before any
  * other functions. tb_init() is equivalent to tb_init_file("/dev/tty"). After
@@ -363,16 +372,121 @@
  */
 
 	% int tb_peek_event(struct tb_event *event, int timeout_ms);
-:- pred tb_peek_event(tb_event::in, tb_event::out, int::in, io::di, io::uo) 
-	is det.
+:- pred tb_peek_event(tb_event::in, tb_event::out, int::in, int::out,
+	io::di, io::uo)	is det.
 
-:- impure pred tb_peek_event(tb_event::in, tb_event::out, int::in).
+:- impure pred tb_peek_event(tb_event::in, int::in, int::out) is det.
+:- impure func tb_peek_event(tb_event, int) = int.
 
+/* Same as tb_peek_event except no timeout. */
+	
+	% int tb_poll_event(struct tb_event *event);
+:- pred tb_poll_event(tb_event::in, tb_event::out, int::out, 
+	io::di, io::uo) is det. 
+	
+:- impure pred tb_poll_event(tb_event::in, int::out) is det.
+:- impure func tb_poll_event(tb_event) = int.
+	
+/* Internal termbox FDs that can be used with poll() / select(). Must call
+ * tb_poll_event() / tb_peek_event() if activity is detected. */
+	% int tb_get_fds(int *ttyfd, int *resizefd);	
+	
+% Not sure how to use this call, or if I want to implement it yet, backburner
 
+/* Print and printf functions. Specify param out_w to determine width of printed
+ * string. Incomplete trailing UTF-8 byte sequences are replaced with U+FFFD.
+ * For finer control, use tb_set_cell().
+ */
 
+% int tb_print(int x, int y, uintattr_t fg, uintattr_t bg, const char *str);
+:- pred tb_print(int::in, int::in, uintattr::in, uintattr::in, string::in,
+	io::di, io::uo) is det.
+	
+:- impure pred tb_print(int::in, int::in, uintattr::in, uintattr::in,
+	string::in) is det.
 
+% int tb_printf(int x, int y, uintattr_t fg, uintattr_t bg, const char *fmt, ...);
+% Mercury does not support variadic function calls, and calls string.format on
+% output before sending it to the output api calls
 
+% int tb_print_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
+%    const char *str);
+:- pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, uint::in,
+	string::in, io::di, io::uo) is det.
+	
+:- impure pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, 
+	uint::in, string::in) is det.
 
+%int tb_printf_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
+%    const char *fmt, ...);
+% As above, can't properly call printf from mercury
+
+/* Send raw bytes to terminal. */
+
+	% int tb_send(const char *buf, size_t nbuf);
+:- pred tb_send(string::in, uint::in, io::di, io::uo) is det.
+
+:- impure pred tb_send(string::in, uint::in) is det.
+
+% int tb_sendf(const char *fmt, ...);
+% Again, not implemented.
+
+% TODO: adress whether or not I want to adress custom functions, it's possible
+% I've done it with my Appolo Mercury-Lua bridge
+
+/* Return byte length of codepoint given first byte of UTF-8 sequence (1-6). */
+% int tb_utf8_char_length(char c);
+:- pred tb_utf8_char_length(char::in, int::out) is det.
+:- func tb_utf8_char_length(char) = int.
+
+/* Convert UTF-8 null-terminated byte sequence to UTF-32 codepoint.
+ *
+ * If `c` is an empty C string, return 0. `out` is left unchanged.
+ *
+ * If a null byte is encountered in the middle of the codepoint, return a
+ * negative number indicating how many bytes were processed. `out` is left
+ * unchanged.
+ *
+ * Otherwise, return byte length of codepoint (1-6).
+ */
+% int tb_utf8_char_to_unicode(uint32_t *out, const char *c);
+:- pred tb_utf8_char_to_unicode(uint32::out, string::in, int::out) is det.
+
+/* Convert UTF-32 codepoint to UTF-8 null-terminated byte sequence.
+ *
+ * `out` must be char[7] or greater. Return byte length of codepoint (1-6).
+ */
+%int tb_utf8_unicode_to_char(char *out, uint32_t c);
+:- pred tb_utf8_unicode_to_char(string::out, uint32::in, int::out) is det.
+:- func tb_utf8_unicode_to_char(uint32) = string. % Discard byte length
+
+/* Library utility functions */
+
+% int tb_last_errno(void);
+:- pred tb_last_errno(int::out, io::di, io::uo) is det.
+:- semipure func tb_last_errno = int.
+
+% const char *tb_strerror(int err);
+:- func tb_strerror(int) = string.
+
+% struct tb_cell *tb_cell_buffer(void);
+%TODO: the tb_cell foreign type
+
+% int tb_has_truecolor(void);
+:- pred tb_has_truecolor(bool::out, io::di, io::uo) is det.
+
+:- semipure pred tb_has_truecolor is semidet.
+
+% int tb_has_egc(void);
+:- pred tb_has_egc(bool::out, io::di, io::uo) is det.
+
+:- semipure pred tb_has_egc is semidet.
+
+% int tb_attr_width(void);
+:- func tb_attr_width = int.
+
+%const char *tb_version(void);
+:- func tb_version = string.
 
 :- implementation.
 
