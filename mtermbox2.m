@@ -140,6 +140,74 @@
 :- func tb_key_mouse_wheel_up = uint16.
 :- func tb_key_mouse_wheel_down = uint16.
 
+:- func tb_cap_f1 = uint16.
+:- func tb_cap_f2 = uint16.
+:- func tb_cap_f3 = uint16.
+:- func tb_cap_f4 = uint16.
+:- func tb_cap_f5 = uint16.
+:- func tb_cap_f6 = uint16.
+:- func tb_cap_f7 = uint16.
+:- func tb_cap_f8 = uint16.
+:- func tb_cap_f9 = uint16.
+:- func tb_cap_f10 = uint16.
+:- func tb_cap_f11 = uint16.
+:- func tb_cap_f12 = uint16.
+:- func tb_cap_insert = uint16.
+:- func tb_cap_delete = uint16.
+:- func tb_cap_home = uint16.
+:- func tb_cap_end = uint16.
+:- func tb_cap_pgup = uint16.
+:- func tb_cap_pgdn = uint16.
+:- func tb_cap_arrow_up = uint16.
+:- func tb_cap_arrow_down = uint16.
+:- func tb_cap_arrow_left = uint16.
+:- func tb_cap_arrow_right = uint16.
+:- func tb_cap_back_tab = uint16.
+:- func tb_cap__count_keys = uint16.
+:- func tb_cap_enter_ca = uint16.
+:- func tb_cap_exit_ca = uint16.
+:- func tb_cap_show_cursor = uint16.
+:- func tb_cap_hide_cursor = uint16.
+:- func tb_cap_clear_screen = uint16.
+:- func tb_cap_sgr0 = uint16.
+:- func tb_cap_underline = uint16.
+:- func tb_cap_bold = uint16.
+:- func tb_cap_blink = uint16.
+:- func tb_cap_italic = uint16.
+:- func tb_cap_reverse = uint16.
+:- func tb_cap_enter_keypad = uint16.
+:- func tb_cap_exit_keypad = uint16.
+:- func tb_cap_dim = uint16.
+:- func tb_cap_invisible = uint16.
+:- func tb_cap__count = uint16.
+
+/* An incoming event from the tty.
+ *
+ * Given the event type, the following fields are relevant:
+ *
+ *      when TB_EVENT_KEY: (key XOR ch, one will be zero), mod. Note there is
+ *                         overlap between TB_MOD_CTRL and TB_KEY_CTRL_*.
+ *                         TB_MOD_CTRL and TB_MOD_SHIFT are only set as
+ *                         modifiers to TB_KEY_ARROW_*.
+ *
+ *   when TB_EVENT_RESIZE: w, h
+ *
+ *    when TB_EVENT_MOUSE: key (TB_KEY_MOUSE_*), x, y
+ */
+
+:- type tb_event. 
+
+:- pred init_tb_event(tb_event::out) is det.
+:- func init_tb_event = tb_event.
+
+:- func type(tb_event) = uint8. /* one of TB_EVENT_* constants */
+:- func mod(tb_event) = uint8. /* bitwise TB_MOD_* constants */
+:- func key(tb_event) = uint16. /* one of TB_KEY_* constants */
+:- func ch(tb_event) = uint32. /* a Unicode codepoint */
+:- func w(tb_event) = uint32. /* resize width */
+:- func h(tb_event) = uint32. /* resize height */
+:- func x(tb_event) = uint32. /* mouse x */
+:- func y(tb_event) = uint32. /* mouse y */
 
 /* Initializes the termbox library. This function should be called before any
  * other functions. tb_init() is equivalent to tb_init_file("/dev/tty"). After
@@ -408,33 +476,7 @@
 
 %% TODO: funcs for builtin output modes
 
-/* An incoming event from the tty.
- *
- * Given the event type, the following fields are relevant:
- *
- *      when TB_EVENT_KEY: (key XOR ch, one will be zero), mod. Note there is
- *                         overlap between TB_MOD_CTRL and TB_KEY_CTRL_*.
- *                         TB_MOD_CTRL and TB_MOD_SHIFT are only set as
- *                         modifiers to TB_KEY_ARROW_*.
- *
- *   when TB_EVENT_RESIZE: w, h
- *
- *    when TB_EVENT_MOUSE: key (TB_KEY_MOUSE_*), x, y
- */
 
-:- type tb_event. 
-
-:- pred init_tb_event(tb_event::out) is det.
-:- func init_tb_event = tb_event.
-
-:- func type(tb_event) = uint8. /* one of TB_EVENT_* constants */
-:- func mod(tb_event) = uint8. /* bitwise TB_MOD_* constants */
-:- func key(tb_event) = uint16. /* one of TB_KEY_* constants */
-:- func ch(tb_event) = uint32. /* a Unicode codepoint */
-:- func w(tb_event) = uint32. /* resize width */
-:- func h(tb_event) = uint32. /* resize height */
-:- func x(tb_event) = uint32. /* mouse x */
-:- func y(tb_event) = uint32. /* mouse y */
 
 
 /* Wait for an event up to timeout_ms milliseconds and fill the event structure
