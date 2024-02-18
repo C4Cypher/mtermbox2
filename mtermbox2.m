@@ -181,6 +181,33 @@
 :- func tb_cap_invisible = uint16.
 :- func tb_cap__count = uint16.
 
+/* Some hard-coded caps */
+:- func tb_hardcap_enter_mouse = string.
+:- func tb_hardcap_exit_mouse = string.
+:- func tb_hardcap_strikeout = string.
+:- func tb_hardcap_underline_2 = string.
+:- func tb_hardcap_overline = string.
+
+/* Colors (numeric) and attributes (bitwise) (tb_cell.fg, tb_cell.bg) */
+:- func tb_default = uintattr.
+:- func tb_black = uintattr.
+:- func tb_red = uintattr.
+:- func tb_green = uintattr.
+:- func tb_yellow = uintattr.
+:- func tb_blue = uintattr.
+:- func tb_magenta = uintattr.
+:- func tb_cyan = uintattr.
+:- func tb_white = uintattr.
+
+:- func tb_bold = uintattr.
+:- func tb_underline = uintattr.
+:- func tb_reverse = uintattr.
+:- func tb_italic = uintattr.
+:- func tb_blink = uintattr.
+:- func tb_hi_black = uintattr.
+:- func tb_bright = uintattr.
+:- func tb_dim = uintattr.
+
 /* An incoming event from the tty.
  *
  * Given the event type, the following fields are relevant:
