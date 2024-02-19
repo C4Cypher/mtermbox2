@@ -481,16 +481,9 @@
  */
  
 	% int tb_set_input_mode(int mode);
-:- pred tb_set_input_mode(int::in, io::di, io::uo) is det.
+:- pred tb_set_input_mode(int::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_set_input_mode(int::in) is det.
-
-	% get the current input mode
-:- pred mtb_get_input_mode(int::out, io::di, io::uo) is det.
-
-:- semipure pred mtb_get_input_mode(int::out) is det.
-
-:- semipure func mtb_get_input_mode = int is det.
+:- impure pred tb_set_input_mode(int::in, int::out) is det.
 
 %% TODO: funcs for the builtin input modes
 
@@ -587,9 +580,9 @@
  */
  
 	% int tb_set_output_mode(int mode);
-:- pred tb_set_output_mode(int::in, io::di, io::uo) is det.
+:- pred tb_set_output_mode(int::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_set_output_mode(int::in) is det.
+:- impure pred tb_set_output_mode(int::in, int::out) is det.
 
 
 %% TODO: funcs for builtin output modes
@@ -610,7 +603,6 @@
 	io::di, io::uo)	is det.
 
 :- impure pred tb_peek_event(tb_event::in, int::in, int::out) is det.
-:- impure func tb_peek_event(tb_event, int) = int is det.
 
 /* Same as tb_peek_event except no timeout. */
 	
@@ -619,7 +611,6 @@
 	io::di, io::uo) is det. 
 	
 :- impure pred tb_poll_event(tb_event::in, int::out) is det.
-:- impure func tb_poll_event(tb_event) = int is det.
 	
 /* Internal termbox FDs that can be used with poll() / select(). Must call
  * tb_poll_event() / tb_peek_event() if activity is detected. */
@@ -633,11 +624,11 @@
  */
 
 % int tb_print(int x, int y, uintattr_t fg, uintattr_t bg, const char *str);
-:- pred tb_print(int::in, int::in, uintattr::in, uintattr::in, string::in,
-	io::di, io::uo) is det.
+:- pred tb_print(int::in, int::in, uintattr::in, uintattr::in, string::in, 
+	int::out, io::di, io::uo) is det.
 	
 :- impure pred tb_print(int::in, int::in, uintattr::in, uintattr::in,
-	string::in) is det.
+	string::in, int::out) is det.
 
 % int tb_printf(int x, int y, uintattr_t fg, uintattr_t bg, const char *fmt, ...);
 % Mercury does not support variadic function calls, and calls string.format on
@@ -646,10 +637,10 @@
 % int tb_print_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
 %    const char *str);
 :- pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, uint::in,
-	string::in, io::di, io::uo) is det.
+	string::in, int::out, io::di, io::uo) is det.
 	
 :- impure pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, 
-	uint::in, string::in) is det.
+	uint::in, string::in, int::out) is det.
 
 %int tb_printf_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
 %    const char *fmt, ...);
@@ -658,9 +649,9 @@
 /* Send raw bytes to terminal. */
 
 	% int tb_send(const char *buf, size_t nbuf);
-:- pred tb_send(string::in, uint::in, io::di, io::uo) is det.
+:- pred tb_send(string::in, uint::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_send(string::in, uint::in) is det.
+:- impure pred tb_send(string::in, int::out, uint::in) is det.
 
 % int tb_sendf(const char *fmt, ...);
 % Again, not implemented.
@@ -670,8 +661,8 @@
 
 /* Return byte length of codepoint given first byte of UTF-8 sequence (1-6). */
 % int tb_utf8_char_length(char c);
-:- pred tb_utf8_char_length(char::in, int::out) is det.
-:- func tb_utf8_char_length(char) = int is det.
+:- pred tb_utf8_char_length(char::in, int::out, int::out) is det.
+:- func tb_utf8_char_length(char) = int is det. % Ignore error code
 
 /* Convert UTF-8 null-terminated byte sequence to UTF-32 codepoint.
  *
@@ -703,8 +694,6 @@
 % const char *tb_strerror(int err);
 :- func tb_strerror(int) = string is det.
 
-% struct tb_cell *tb_cell_buffer(void);
-%TODO: the tb_cell foreign type
 
 % int tb_has_truecolor(void);
 :- pred tb_has_truecolor(bool::out, io::di, io::uo) is det.
