@@ -40,6 +40,13 @@
 % I'll try to keep things documented, either with my intent, or with comments
 % from the original header. 
 %
+% Note that almost all of the function calls return an int error value, which
+% I've included as an int::out return value
+%
+% I've decided not to implement the features for TB_OPT_EGC
+% This includes the extended declaration for tb_cell and the calls
+% tb_set_cell_ex and tb_extend_cell
+%
 %---------------------------------------------------------------------------%
 %
 % Naming conventions:
@@ -61,152 +68,250 @@
 :- import_module uint32.
 
 /* ASCII key constants (tb_event.key) */
-:- func tb_key_ctrl_tilde = uint16.
-:- func tb_key_ctrl_2 = uint16. /* clash with 'ctrl_tilde'     */
-:- func tb_key_ctrl_a = uint16.
-:- func tb_key_ctrl_b = uint16.
-:- func tb_key_ctrl_c = uint16.
-:- func tb_key_ctrl_d = uint16.
-:- func tb_key_ctrl_e = uint16.
-:- func tb_key_ctrl_f = uint16.
-:- func tb_key_ctrl_g = uint16.
-:- func tb_key_backspace = uint16.
-:- func tb_key_ctrl_h = uint16. /* clash with 'ctrl_backspace' */
-:- func tb_key_tab = uint16.
-:- func tb_key_ctrl_i = uint16. /* clash with 'tab'            */
-:- func tb_key_ctrl_j = uint16.
-:- func tb_key_ctrl_k = uint16.
-:- func tb_key_ctrl_l = uint16.
-:- func tb_key_enter = uint16.
-:- func tb_key_ctrl_m = uint16. /* clash with 'enter'          */
-:- func tb_key_ctrl_n = uint16.
-:- func tb_key_ctrl_o = uint16.
-:- func tb_key_ctrl_p = uint16.
-:- func tb_key_ctrl_q = uint16.
-:- func tb_key_ctrl_r = uint16.
-:- func tb_key_ctrl_s = uint16.
-:- func tb_key_ctrl_t = uint16.
-:- func tb_key_ctrl_u = uint16.
-:- func tb_key_ctrl_v = uint16.
-:- func tb_key_ctrl_w = uint16.
-:- func tb_key_ctrl_x = uint16.
-:- func tb_key_ctrl_y = uint16.
-:- func tb_key_ctrl_z = uint16.
-:- func tb_key_esc = uint16.
-:- func tb_key_ctrl_lsq_bracket = uint16. /* clash with 'esc'            */
-:- func tb_key_ctrl_3 = uint16. /* clash with 'esc'            */
-:- func tb_key_ctrl_4 = uint16.
-:- func tb_key_ctrl_backslash = uint16. /* clash with 'ctrl_4'         */
-:- func tb_key_ctrl_5 = uint16.
-:- func tb_key_ctrl_rsq_bracket = uint16. /* clash with 'ctrl_5'         */
-:- func tb_key_ctrl_6 = uint16.
-:- func tb_key_ctrl_7 = uint16.
-:- func tb_key_ctrl_slash = uint16. /* clash with 'ctrl_7'         */
-:- func tb_key_ctrl_underscore = uint16. /* clash with 'ctrl_7'         */
-:- func tb_key_space = uint16.
-:- func tb_key_backspace2 = uint16.
-:- func tb_key_ctrl_8 = uint16. /* clash with 'backspace2'     */
+:- func tb_key_ctrl_tilde = uint16 is det.
+:- func tb_key_ctrl_2 = uint16 is det. /* clash with 'ctrl_tilde'     */
+:- func tb_key_ctrl_a = uint16 is det.
+:- func tb_key_ctrl_b = uint16 is det.
+:- func tb_key_ctrl_c = uint16 is det.
+:- func tb_key_ctrl_d = uint16 is det.
+:- func tb_key_ctrl_e = uint16 is det.
+:- func tb_key_ctrl_f = uint16 is det.
+:- func tb_key_ctrl_g = uint16 is det.
+:- func tb_key_backspace = uint16 is det.
+:- func tb_key_ctrl_h = uint16 is det. /* clash with 'ctrl_backspace' */
+:- func tb_key_tab = uint16 is det.
+:- func tb_key_ctrl_i = uint16 is det. /* clash with 'tab'            */
+:- func tb_key_ctrl_j = uint16 is det.
+:- func tb_key_ctrl_k = uint16 is det.
+:- func tb_key_ctrl_l = uint16 is det.
+:- func tb_key_enter = uint16 is det.
+:- func tb_key_ctrl_m = uint16 is det. /* clash with 'enter'          */
+:- func tb_key_ctrl_n = uint16 is det.
+:- func tb_key_ctrl_o = uint16 is det.
+:- func tb_key_ctrl_p = uint16 is det.
+:- func tb_key_ctrl_q = uint16 is det.
+:- func tb_key_ctrl_r = uint16 is det.
+:- func tb_key_ctrl_s = uint16 is det.
+:- func tb_key_ctrl_t = uint16 is det.
+:- func tb_key_ctrl_u = uint16 is det.
+:- func tb_key_ctrl_v = uint16 is det.
+:- func tb_key_ctrl_w = uint16 is det.
+:- func tb_key_ctrl_x = uint16 is det.
+:- func tb_key_ctrl_y = uint16 is det.
+:- func tb_key_ctrl_z = uint16 is det.
+:- func tb_key_esc = uint16 is det.
+:- func tb_key_ctrl_lsq_bracket = uint16 is det. /* clash with 'esc'            */
+:- func tb_key_ctrl_3 = uint16 is det. /* clash with 'esc'            */
+:- func tb_key_ctrl_4 = uint16 is det.
+:- func tb_key_ctrl_backslash = uint16 is det. /* clash with 'ctrl_4'         */
+:- func tb_key_ctrl_5 = uint16 is det.
+:- func tb_key_ctrl_rsq_bracket = uint16 is det. /* clash with 'ctrl_5'         */
+:- func tb_key_ctrl_6 = uint16 is det.
+:- func tb_key_ctrl_7 = uint16 is det.
+:- func tb_key_ctrl_slash = uint16 is det. /* clash with 'ctrl_7'         */
+:- func tb_key_ctrl_underscore = uint16 is det. /* clash with 'ctrl_7'         */
+:- func tb_key_space = uint16 is det.
+:- func tb_key_backspace2 = uint16 is det.
+:- func tb_key_ctrl_8 = uint16 is det. /* clash with 'backspace2'     */
 
-:- func tb_key_i(int) = uint16.
+:- func tb_key_i(int) = uint16 is det.
 /* terminal-dependent key constants (tb_event.key) and terminfo capabilities */
 
-:- func tb_key_f1 = uint16.
-:- func tb_key_f2 = uint16.
-:- func tb_key_f3 = uint16.
-:- func tb_key_f4 = uint16.
-:- func tb_key_f5 = uint16.
-:- func tb_key_f6 = uint16.
-:- func tb_key_f7 = uint16.
-:- func tb_key_f8 = uint16.
-:- func tb_key_f9 = uint16.
-:- func tb_key_f10 = uint16.
-:- func tb_key_f11 = uint16.
-:- func tb_key_f12 = uint16.
-:- func tb_key_insert = uint16.
-:- func tb_key_delete = uint16.
-:- func tb_key_home = uint16.
-:- func tb_key_end = uint16.
-:- func tb_key_pgup = uint16.
-:- func tb_key_pgdn = uint16.
-:- func tb_key_arrow_up = uint16.
-:- func tb_key_arrow_down = uint16.
-:- func tb_key_arrow_left = uint16.
-:- func tb_key_arrow_right = uint16.
-:- func tb_key_back_tab = uint16.
-:- func tb_key_mouse_left = uint16.
-:- func tb_key_mouse_right = uint16.
-:- func tb_key_mouse_middle = uint16.
-:- func tb_key_mouse_release = uint16.
-:- func tb_key_mouse_wheel_up = uint16.
-:- func tb_key_mouse_wheel_down = uint16.
+:- func tb_key_f1 = uint16 is det.
+:- func tb_key_f2 = uint16 is det.
+:- func tb_key_f3 = uint16 is det.
+:- func tb_key_f4 = uint16 is det.
+:- func tb_key_f5 = uint16 is det.
+:- func tb_key_f6 = uint16 is det.
+:- func tb_key_f7 = uint16 is det.
+:- func tb_key_f8 = uint16 is det.
+:- func tb_key_f9 = uint16 is det.
+:- func tb_key_f10 = uint16 is det.
+:- func tb_key_f11 = uint16 is det.
+:- func tb_key_f12 = uint16 is det.
+:- func tb_key_insert = uint16 is det.
+:- func tb_key_delete = uint16 is det.
+:- func tb_key_home = uint16 is det.
+:- func tb_key_end = uint16 is det.
+:- func tb_key_pgup = uint16 is det.
+:- func tb_key_pgdn = uint16 is det.
+:- func tb_key_arrow_up = uint16 is det.
+:- func tb_key_arrow_down = uint16 is det.
+:- func tb_key_arrow_left = uint16 is det.
+:- func tb_key_arrow_right = uint16 is det.
+:- func tb_key_back_tab = uint16 is det.
+:- func tb_key_mouse_left = uint16 is det.
+:- func tb_key_mouse_right = uint16 is det.
+:- func tb_key_mouse_middle = uint16 is det.
+:- func tb_key_mouse_release = uint16 is det.
+:- func tb_key_mouse_wheel_up = uint16 is det.
+:- func tb_key_mouse_wheel_down = uint16 is det.
 
-:- func tb_cap_f1 = uint16.
-:- func tb_cap_f2 = uint16.
-:- func tb_cap_f3 = uint16.
-:- func tb_cap_f4 = uint16.
-:- func tb_cap_f5 = uint16.
-:- func tb_cap_f6 = uint16.
-:- func tb_cap_f7 = uint16.
-:- func tb_cap_f8 = uint16.
-:- func tb_cap_f9 = uint16.
-:- func tb_cap_f10 = uint16.
-:- func tb_cap_f11 = uint16.
-:- func tb_cap_f12 = uint16.
-:- func tb_cap_insert = uint16.
-:- func tb_cap_delete = uint16.
-:- func tb_cap_home = uint16.
-:- func tb_cap_end = uint16.
-:- func tb_cap_pgup = uint16.
-:- func tb_cap_pgdn = uint16.
-:- func tb_cap_arrow_up = uint16.
-:- func tb_cap_arrow_down = uint16.
-:- func tb_cap_arrow_left = uint16.
-:- func tb_cap_arrow_right = uint16.
-:- func tb_cap_back_tab = uint16.
-:- func tb_cap__count_keys = uint16.
-:- func tb_cap_enter_ca = uint16.
-:- func tb_cap_exit_ca = uint16.
-:- func tb_cap_show_cursor = uint16.
-:- func tb_cap_hide_cursor = uint16.
-:- func tb_cap_clear_screen = uint16.
-:- func tb_cap_sgr0 = uint16.
-:- func tb_cap_underline = uint16.
-:- func tb_cap_bold = uint16.
-:- func tb_cap_blink = uint16.
-:- func tb_cap_italic = uint16.
-:- func tb_cap_reverse = uint16.
-:- func tb_cap_enter_keypad = uint16.
-:- func tb_cap_exit_keypad = uint16.
-:- func tb_cap_dim = uint16.
-:- func tb_cap_invisible = uint16.
-:- func tb_cap__count = uint16.
+:- func tb_cap_f1 = uint16 is det.
+:- func tb_cap_f2 = uint16 is det.
+:- func tb_cap_f3 = uint16 is det.
+:- func tb_cap_f4 = uint16 is det.
+:- func tb_cap_f5 = uint16 is det.
+:- func tb_cap_f6 = uint16 is det.
+:- func tb_cap_f7 = uint16 is det.
+:- func tb_cap_f8 = uint16 is det.
+:- func tb_cap_f9 = uint16 is det.
+:- func tb_cap_f10 = uint16 is det.
+:- func tb_cap_f11 = uint16 is det.
+:- func tb_cap_f12 = uint16 is det.
+:- func tb_cap_insert = uint16 is det.
+:- func tb_cap_delete = uint16 is det.
+:- func tb_cap_home = uint16 is det.
+:- func tb_cap_end = uint16 is det.
+:- func tb_cap_pgup = uint16 is det.
+:- func tb_cap_pgdn = uint16 is det.
+:- func tb_cap_arrow_up = uint16 is det.
+:- func tb_cap_arrow_down = uint16 is det.
+:- func tb_cap_arrow_left = uint16 is det.
+:- func tb_cap_arrow_right = uint16 is det.
+:- func tb_cap_back_tab = uint16 is det.
+:- func tb_cap__count_keys = uint16 is det.
+:- func tb_cap_enter_ca = uint16 is det.
+:- func tb_cap_exit_ca = uint16 is det.
+:- func tb_cap_show_cursor = uint16 is det.
+:- func tb_cap_hide_cursor = uint16 is det.
+:- func tb_cap_clear_screen = uint16 is det.
+:- func tb_cap_sgr0 = uint16 is det.
+:- func tb_cap_underline = uint16 is det.
+:- func tb_cap_bold = uint16 is det.
+:- func tb_cap_blink = uint16 is det.
+:- func tb_cap_italic = uint16 is det.
+:- func tb_cap_reverse = uint16 is det.
+:- func tb_cap_enter_keypad = uint16 is det.
+:- func tb_cap_exit_keypad = uint16 is det.
+:- func tb_cap_dim = uint16 is det.
+:- func tb_cap_invisible = uint16 is det.
+:- func tb_cap__count = uint16 is det.
 
 /* Some hard-coded caps */
-:- func tb_hardcap_enter_mouse = string.
-:- func tb_hardcap_exit_mouse = string.
-:- func tb_hardcap_strikeout = string.
-:- func tb_hardcap_underline_2 = string.
-:- func tb_hardcap_overline = string.
+:- func tb_hardcap_enter_mouse = string is det.
+:- func tb_hardcap_exit_mouse = string is det.
+:- func tb_hardcap_strikeout = string is det.
+:- func tb_hardcap_underline_2 = string is det.
+:- func tb_hardcap_overline = string is det.
 
 /* Colors (numeric) and attributes (bitwise) (tb_cell.fg, tb_cell.bg) */
-:- func tb_default = uintattr.
-:- func tb_black = uintattr.
-:- func tb_red = uintattr.
-:- func tb_green = uintattr.
-:- func tb_yellow = uintattr.
-:- func tb_blue = uintattr.
-:- func tb_magenta = uintattr.
-:- func tb_cyan = uintattr.
-:- func tb_white = uintattr.
+:- func tb_default = uintattr is det.
+:- func tb_black = uintattr is det.
+:- func tb_red = uintattr is det.
+:- func tb_green = uintattr is det.
+:- func tb_yellow = uintattr is det.
+:- func tb_blue = uintattr is det.
+:- func tb_magenta = uintattr is det.
+:- func tb_cyan = uintattr is det.
+:- func tb_white = uintattr is det.
 
-:- func tb_bold = uintattr.
-:- func tb_underline = uintattr.
-:- func tb_reverse = uintattr.
-:- func tb_italic = uintattr.
-:- func tb_blink = uintattr.
-:- func tb_hi_black = uintattr.
-:- func tb_bright = uintattr.
-:- func tb_dim = uintattr.
+:- func tb_bold = uintattr is det.
+:- func tb_underline = uintattr is det.
+:- func tb_reverse = uintattr is det.
+:- func tb_italic = uintattr is det.
+:- func tb_blink = uintattr is det.
+:- func tb_hi_black = uintattr is det.
+:- func tb_bright = uintattr is det.
+:- func tb_dim = uintattr is det.
+
+/* Event types (tb_event.type) */
+:- func tb_event_key = uint8 is det.
+:- func tb_event_resize = uint8 is det.
+:- func tb_event_mouse = uint8 is det.
+
+/* key modifiers (bitwise) (tb_event.mod) */
+:- func tb_mod_alt = uint8 is det.
+:- func tb_mod_ctrl = uint8 is det.
+:- func tb_mod_shift = uint8 is det.
+:- func tb_mod_motion = uint8 is det.
+
+/* input modes (bitwise) (tb_set_input_mode) */
+:- func tb_input_current = uint8 is det.
+:- func tb_input_esc = uint8 is det.
+:- func tb_input_alt = uint8 is det.
+:- func tb_input_mouse = uint8 is det.
+
+/* output modes (tb_set_output_mode) */
+:- func tb_output_current = uint8 is det.
+:- func tb_output_normal = uint8 is det.
+:- func tb_output_256 = uint8 is det.
+:- func tb_output_216 = uint8 is det.
+:- func tb_output_grayscale = uint8 is det.
+:- func tb_output_truecolor = uint8 is det.
+
+
+
+
+/* Common function return values unless otherwise noted.
+ *
+ * Library behavior is undefined after receiving TB_ERR_MEM. Callers may
+ * attempt reinitializing by freeing memory, invoking tb_shutdown, then
+ * tb_init.
+ */
+:- func tb_ok = int is det.
+:- func tb_err = int is det.
+:- func tb_err_need_more = int is det.
+:- func tb_err_init_already = int is det.
+:- func tb_err_init_open = int is det.
+:- func tb_err_mem = int is det.
+:- func tb_err_no_event = int is det.
+:- func tb_err_no_term = int is det.
+:- func tb_err_not_init = int is det.
+:- func tb_err_out_of_bounds = int is det.
+:- func tb_err_read = int is det.
+:- func tb_err_resize_ioctl = int is det.
+:- func tb_err_resize_pipe = int is det.
+:- func tb_err_resize_sigaction = int is det.
+:- func tb_err_poll = int is det.
+:- func tb_err_tcgetattr = int is det.
+:- func tb_err_tcsetattr = int is det.
+:- func tb_err_unsupported_term = int is det.
+:- func tb_err_resize_write = int is det.
+:- func tb_err_resize_poll = int is det.
+:- func tb_err_resize_read = int is det.
+:- func tb_err_resize_sscanf = int is det.
+:- func tb_err_cap_collision = int is det.
+:- func tb_err_select = int is det.
+:- func tb_err_resize_select = int is det.
+
+% By default this library calls termbox2.h with TB_OPT_ATTR_W = 32 - Cypher
+:- type uintattr == uint32.
+
+/* The terminal screen is represented as 2d array of cells. The structure is
+ * optimized for dealing with single-width (wcwidth()==1) Unicode codepoints,
+ * however some support for grapheme clusters (e.g., combining diacritical
+ * marks) and wide codepoints (e.g., Hiragana) is provided through ech, nech,
+ * cech via tb_set_cell_ex(). ech is only valid when nech>0, otherwise ch is
+ * used.
+ *
+ * For non-single-width codepoints, given N=wcwidth(ch)/wcswidth(ech):
+ *
+ *   when N==0: termbox forces a single-width cell. Callers should avoid this
+ *              if aiming to render text accurately.
+ *
+ *    when N>1: termbox zeroes out the following N-1 cells and skips sending
+ *              them to the tty. So, e.g., if the caller sets x=0,y=0 to an N==2
+ *              codepoint, the caller's next set should be at x=2,y=0. Anything
+ *              set at x=1,y=0 will be ignored. If there are not enough columns
+ *              remaining on the line to render N width, spaces are sent
+ *              instead.
+ *
+ * See tb_present() for implementation.
+ */
+
+:- type tb_cell.
+
+:- func init_tb_cell = tb_cell is det.
+:- func tb_cell(uint32, uintattr, uintattr) = tb_cell is det.
+
+:- func ch(tb_cell) = uint32 is det.   /* a Unicode codepoint */
+:- func fg(tb_cell) = uintattr is det. /* bitwise foreground attributes */
+:- func bg(tb_cell) = uintattr is det. /* bitwise background attributes */
+
+:- func 'ch :='(tb_cell, uint32) = tb_cell is det.
+:- func 'fg :='(tb_cell, uintattr) = tb_cell is det.
+:- func 'bg :='(tb_cell, uintattr) = tb_cell is det.
 
 /* An incoming event from the tty.
  *
@@ -225,16 +330,17 @@
 :- type tb_event. 
 
 :- pred init_tb_event(tb_event::out) is det.
-:- func init_tb_event = tb_event.
+:- func init_tb_event = tb_event is det.
 
-:- func type(tb_event) = uint8. /* one of TB_EVENT_* constants */
-:- func mod(tb_event) = uint8. /* bitwise TB_MOD_* constants */
-:- func key(tb_event) = uint16. /* one of TB_KEY_* constants */
-:- func ch(tb_event) = uint32. /* a Unicode codepoint */
-:- func w(tb_event) = uint32. /* resize width */
-:- func h(tb_event) = uint32. /* resize height */
-:- func x(tb_event) = uint32. /* mouse x */
-:- func y(tb_event) = uint32. /* mouse y */
+:- func type(tb_event) = uint8 is det. /* one of TB_EVENT_* constants */
+:- func mod(tb_event) = uint8 is det. /* bitwise TB_MOD_* constants */
+:- func key(tb_event) = uint16 is det. /* one of TB_KEY_* constants */
+:- func ch(tb_event) = uint32 is det. /* a Unicode codepoint */
+:- func w(tb_event) = uint32 is det. /* resize width */
+:- func h(tb_event) = uint32 is det. /* resize height */
+:- func x(tb_event) = uint32 is det. /* mouse x */
+:- func y(tb_event) = uint32 is det. /* mouse y */
+
 
 /* Initializes the termbox library. This function should be called before any
  * other functions. tb_init() is equivalent to tb_init_file("/dev/tty"). After
@@ -244,29 +350,30 @@
  
  
 	% int tb_init(void);
-:- pred tb_init(io::di, io::uo) is det.
+:- pred tb_init(int::out, io::di, io::uo) is det.
 
 :- impure pred tb_init is det.
+:- impure func tb_init = int is det.
 
 	% int tb_init_file(const char *path);
-:- pred tb_init_file(string::in, io::di, io::uo) is det.
+:- pred tb_init_file(string::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_init(string::in) is det.
+:- impure pred tb_init(string::in, int::out) is det.
 
 	% int tb_init_fd(int ttyfd);
-:- pred tb_init_fd(int::in, io::di, io::uo) is det.
+:- pred tb_init_fd(int::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_init_fd(int::in) is det.
+:- impure pred tb_init_fd(int::in, int::out) is det.
 
 	% int tb_init_rwfd(int rfd, int wfd);
-:- pred tb_init_rwfd(int::in, int::in, io::di, io::uo) is det.
+:- pred tb_init_rwfd(int::in, int::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_init_rwfd(int::in, int::in) is det.
+:- impure pred tb_init_rwfd(int::in, int::in, int::out) is det.
 
 	% int tb_shutdown(void);
-:- pred tb_shutdown(io::di, io::uo) is det.
+:- pred tb_shutdown(int::out, io::di, io::uo) is det.
 
-:- impure pred tb_shutdown is det.
+:- impure pred tb_shutdown(int::out) is det.
 
 /* Returns the size of the internal back buffer (which is the same as terminal's
  * window size in rows and columns). The internal buffer can be resized after
@@ -276,14 +383,14 @@
  */
  
 	% int tb_width(void);
-:- pred tb_width(int::out, io::di, io::uo) is det.
+:- pred tb_width(int::out, int::out, io::di, io::uo) is det.
 
-:- semipure func tb_width = int is det.
+:- semipure pred tb_width(int::out, int::out) is det.
 
 	% int tb_height(void);
 :- pred tb_height(int::out, io::di, io::uo) is det.
 
-:- semipure func tb_height = int is det.
+:- semipure pred tb_height(int::out, int::out) is det.
 
 /* Clears the internal back buffer using TB_DEFAULT color or the
  * color/attributes set by tb_set_clear_attrs() function.
@@ -291,81 +398,65 @@
  
  
 	% int tb_clear(void);
-:- pred tb_clear(io::di, io::uo) is det.
+:- pred tb_clear(int::out, io::di, io::uo) is det.
 
-:- impure pred tb_clear is det.
+:- impure pred tb_clear(int::out) is det.
 
-:- type uintattr == uint32.
 
 	% int tb_set_clear_attrs(uintattr_t fg, uintattr_t bg);
-:- pred tb_set_clear_attrs(uintattr::in, uintattr::in, io::di, io::uo) is det.
+:- pred tb_set_clear_attrs(uintattr::in, uintattr::in,
+	int::out, io::di, io::uo) is det.
 
-:- impure pred tb_set_clear_attrs(uintattr::in, uintattr::in) is det.
+:- impure pred tb_set_clear_attrs(uintattr::in, uintattr::in, int::out) is det.
 
 /* Synchronizes the internal back buffer with the terminal by writing to tty. */
 
 	% int tb_present(void);
- :- pred tb_present(io::di, io::uo) is det.
+ :- pred tb_present(int::out, io::di, io::uo) is det.
  
- :- impure pred tb_present is det.
+ :- impure pred tb_present(int::out) is det.
  
  /* Clears the internal front buffer effectively forcing a complete re-render of
  * the back buffer to the tty. It is not necessary to call this under normal
  * circumstances. */
 
 	% int tb_invalidate(void);
-:- pred tb_invalidate(io::di, io::uo) is det.
+:- pred tb_invalidate(int::out, io::di, io::uo) is det.
 
-:- impure pred tb_invalidate is det.
+:- impure pred tb_invalidate(int::out) is det.
 
 /* Sets the position of the cursor. Upper-left character is (0, 0). */
 
 	% int tb_set_cursor(int cx, int cy);
-:- pred tb_set_cursor(int::in, int::in, io::di, io::uo) is det.
+:- pred tb_set_cursor(int::in, int::in, int::out, io::di, io::uo) is det.
 
-:- impure tb_set_cursor(int::in, int::in) is det.
+:- impure tb_set_cursor(int::in, int::in, int::out) is det.
 	
 	%int tb_hide_cursor(void);
-:- pred tb_hide_cursor(io::di, io::uo) is det.
+:- pred tb_hide_cursor(int::out, io::di, io::uo) is det.
 
-:- impure pred tb_hide_cursor is det.
+:- impure pred tb_hide_cursor(int::out) is det.
 
 /* Set cell contents in the internal back buffer at the specified position.
  *
  * Use tb_set_cell_ex() for rendering grapheme clusters (e.g., combining
- * diacritical marks).
+ * diacritical marks). *NOT IMPLEMENTED FOR MERCURY*
  *
  * Function tb_set_cell(x, y, ch, fg, bg) is equivalent to
  * tb_set_cell_ex(x, y, &ch, 1, fg, bg).
  *
  * Function tb_extend_cell() is a shortcut for appending 1 codepoint to
- * cell->ech.
+ * cell->ech. *NOT IMPLEMENTED FOR MERCURY*
  */
  
 	% int tb_set_cell(int x, int y, uint32_t ch, uintattr_t fg, uintattr_t bg);
 :- pred tb_set_cell(int::in, int::in, uint32::in, uintattr::in, uintattr::in,
-	io::di, io::uo) is det.
+	int::out, io::di, io::uo) is det.
 	
 :- impure pred tb_set_cell(int::in, int::in, uint32::in, uintattr::in, 
-	uintattr::in) is det.
-
-	% int tb_set_cell_ex(int x, int y, uint32_t *ch, size_t nch, uintattr_t fg,
-    % uintattr_t bg);
-/*:- pred tb_set_cell_ex(int::in, int::in, XXX::in, uint::in, uint::in,
-	uint::in, io::di, io::uo) is det.
-	
-:- impure pred tb_set_cell_ex(int::in, int::in, XXX::in, uint::in, uint::in,
-	uint::in) is det.*/ 
-	
-% Haven't decided if I'm going to bother with tb_set_cell_ex until I'm ready to
-% tackle natively passing array pointers back and forth to and from Mercury
+	uintattr::in, int::out) is det.
 
 
-
-	% int tb_extend_cell(int x, int y, uint32_t ch);
-:- pred tb_extend_cell(int::in, int::in, uint32::in, io::di, io::uo) is det.
-
-:- impure pred tb_extend_cell(int::in, int::in, uint32::in) is det.
 
 /* Sets the input mode. Termbox has two input modes:
  *
@@ -519,7 +610,7 @@
 	io::di, io::uo)	is det.
 
 :- impure pred tb_peek_event(tb_event::in, int::in, int::out) is det.
-:- impure func tb_peek_event(tb_event, int) = int.
+:- impure func tb_peek_event(tb_event, int) = int is det.
 
 /* Same as tb_peek_event except no timeout. */
 	
@@ -528,7 +619,7 @@
 	io::di, io::uo) is det. 
 	
 :- impure pred tb_poll_event(tb_event::in, int::out) is det.
-:- impure func tb_poll_event(tb_event) = int.
+:- impure func tb_poll_event(tb_event) = int is det.
 	
 /* Internal termbox FDs that can be used with poll() / select(). Must call
  * tb_poll_event() / tb_peek_event() if activity is detected. */
@@ -580,7 +671,7 @@
 /* Return byte length of codepoint given first byte of UTF-8 sequence (1-6). */
 % int tb_utf8_char_length(char c);
 :- pred tb_utf8_char_length(char::in, int::out) is det.
-:- func tb_utf8_char_length(char) = int.
+:- func tb_utf8_char_length(char) = int is det.
 
 /* Convert UTF-8 null-terminated byte sequence to UTF-32 codepoint.
  *
@@ -601,16 +692,16 @@
  */
 %int tb_utf8_unicode_to_char(char *out, uint32_t c);
 :- pred tb_utf8_unicode_to_char(string::out, uint32::in, int::out) is det.
-:- func tb_utf8_unicode_to_char(uint32) = string. % Discard byte length
+:- func tb_utf8_unicode_to_char(uint32) = string is det. % Discard byte length
 
 /* Library utility functions */
 
 % int tb_last_errno(void);
 :- pred tb_last_errno(int::out, io::di, io::uo) is det.
-:- semipure func tb_last_errno = int.
+:- semipure func tb_last_errno = int is det.
 
 % const char *tb_strerror(int err);
-:- func tb_strerror(int) = string.
+:- func tb_strerror(int) = string is det.
 
 % struct tb_cell *tb_cell_buffer(void);
 %TODO: the tb_cell foreign type
@@ -626,10 +717,10 @@
 :- semipure pred tb_has_egc is semidet.
 
 % int tb_attr_width(void);
-:- func tb_attr_width = int.
+:- func tb_attr_width = int is det.
 
 %const char *tb_version(void);
-:- func tb_version = string.
+:- func tb_version = string is det.
 
 :- implementation.
 
