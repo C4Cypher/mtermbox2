@@ -709,4 +709,22 @@
 
 :- implementation.
 
-:- pragma 
+:- pragma require_feature_set([conservative_gc]).
+
+:- pragma foreign_decl("C", "
+	/* Ensure that the termbox2.h library plays nice with the Mercury GC */
+	#define tb_malloc 	MR_GC_malloc
+	#define tb_realloc	MR_GC_realloc
+	#define tb_free 	MR_GC_free
+	
+	/* This libary assumes that uintattr_t is a 32 bit unsigned integer
+		if you want to change this, be sure to change the declaration of the
+		:- type uintatrr mercury type above accordingly. I haven't yet included
+		support for the 64 bit graphics options. We'll see if I do so after
+		I get this library working. */
+	#define TB_OPT_ATTR_W 32
+	
+	/* Declarations that modify termbox compile time options need to be made
+		before this point. */
+	#include ""termbox2.h"" 
+").
