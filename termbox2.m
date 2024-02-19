@@ -27,18 +27,19 @@
 % 
 %----------------------------------------------------------------------------%
 %
-% File:          mtermbox2.m
+% File:          termbox2.m
 % Main author:   C4Cypher
 % Maintained by: C4Cypher
 % Stability:     Low
 % 
-% TODO Write a short summary for here and the Github readme
-% Direct binding to the termbox2 library, plus whatever utilities I decide
-% to include. I intend to implement a single module for this, following the 
+% Direct binding to the termbox2 library. 
+% I intend to implement a single module for this, following the 
 % single header intent of the termbox2 library itself.
+% 
+% This mercury module is written as a direct binding, allowing one to adapt
+% their own interface to handle interact with the termbox2 library header.
 %
-% I'll try to keep things documented, either with my intent, or with comments
-% from the original header. 
+% The overwhelming majority of the comments are directly from the header.
 %
 % Note that almost all of the function calls return an int error value, which
 % I've included as an int::out return value
@@ -47,17 +48,12 @@
 % This includes the extended declaration for tb_cell and the calls
 % tb_set_cell_ex and tb_extend_cell
 %
-%---------------------------------------------------------------------------%
-%
-% Naming conventions:
-%
-% Direct one to one calls will have the tb prefix wheras my addditions will
-% use the mtb prefix
+% Full credit for the termbox2 library belongs to nsf and Adam Saponara
 %
 %---------------------------------------------------------------------------%
 %---------------------------------------------------------------------------%
 
-:- module mtermbox2.
+:- module termbox2.
 :- interface.
 
 :- import_module io.
@@ -713,3 +709,4 @@
 
 :- implementation.
 
+:- pragma 
