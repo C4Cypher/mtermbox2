@@ -272,7 +272,10 @@
 :- func tb_err_select = int is det.
 :- func tb_err_resize_select = int is det.
 
-% By default this library calls termbox2.h with TB_OPT_ATTR_W = 32 - Cypher
+% By default this library calls termbox2.h with TB_OPT_ATTR_W = 32
+% If you want to call this library with a different width, be sure to adjust
+% the # define TB_OPT_ATTR_W in the declaration at the top of the 
+% implementation of this module.
 :- type uintattr == uint32.
 
 /* The terminal screen is represented as 2d array of cells. The structure is
@@ -1465,8 +1468,33 @@
 
 
 
+:- pragma foreign_type("C", tb_cell, "struct tb_cell").
 
+:- pragma foreign_code("C", "static const struct tb_cell new_tb_cell;")
 
+:- pragma foreign_proc("C", init_tb_cell = C,
+	[will_not_call_mercury], "C = new_tb_cell;").
+:- pragma inline(init_tb_cell/0).
+
+:- pragma foreign_proc("C", tb_cell(Ch, Fg, Bg) = Cell,
+	[will_not_call_mercury], "Cell = { Ch, Fg, Bg };").
+:- pragma inline(tb_cell/3).
+
+:- pragma foreign_proc("C", ch(Cell) = Ch, [will_not_call_mercury], 
+	"Ch = Cell.ch;").
+:- pragma inline(ch/1).
+
+:- pragma foreign_proc("C", fg(Cell) = Fg, [will_not_call_mercury], 
+	"Fg = Cell.fg;").
+:- pragma inline(ch/1).
+
+:- pragma foreign_proc("C", bg(Cell) = Bg, [will_not_call_mercury], 
+	"Bg = Cell.bg;").
+:- pragma inline(ch/1).
+
+'ch :='(C0, Ch) = tb_cell(Ch, fg(C0), bg(C0)).
+'fg :='(C0, Fg) = tb_cell(ch(C0), Fg, bg(C0)).
+'bg :='(C0, Bg) = tb_cell(ch(C0), fg(C0), Bg).
 
 
 
