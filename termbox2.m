@@ -57,6 +57,7 @@
 :- interface.
 
 :- import_module io.
+:- import_module char.
 :- import_module string.
 :- import_module bool.
 :- import_module uint.
@@ -167,7 +168,7 @@
 :- func tb_cap_arrow_left = uint16 is det.
 :- func tb_cap_arrow_right = uint16 is det.
 :- func tb_cap_back_tab = uint16 is det.
-:- func tb_cap__count_keys = uint16 is det.
+:- func tb_cap_count_keys = uint16 is det.
 :- func tb_cap_enter_ca = uint16 is det.
 :- func tb_cap_exit_ca = uint16 is det.
 :- func tb_cap_show_cursor = uint16 is det.
@@ -183,7 +184,7 @@
 :- func tb_cap_exit_keypad = uint16 is det.
 :- func tb_cap_dim = uint16 is det.
 :- func tb_cap_invisible = uint16 is det.
-:- func tb_cap__count = uint16 is det.
+:- func tb_cap_count = uint16 is det.
 
 /* Some hard-coded caps */
 :- func tb_hardcap_enter_mouse = string is det.
@@ -429,7 +430,7 @@
 	% int tb_set_cursor(int cx, int cy);
 :- pred tb_set_cursor(int::in, int::in, int::out, io::di, io::uo) is det.
 
-:- impure tb_set_cursor(int::in, int::in, int::out) is det.
+:- impure pred tb_set_cursor(int::in, int::in, int::out) is det.
 	
 	%int tb_hide_cursor(void);
 :- pred tb_hide_cursor(int::out, io::di, io::uo) is det.
@@ -634,11 +635,11 @@
 
 % int tb_print_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
 %    const char *str);
-:- pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, uint::in,
+:- pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, uint::out,
 	string::in, int::out, io::di, io::uo) is det.
 	
 :- impure pred tb_print_ex(int::in, int::in, uintattr::in, uintattr::in, 
-	uint::in, string::in, int::out) is det.
+	uint::out, string::in, int::out) is det.
 
 %int tb_printf_ex(int x, int y, uintattr_t fg, uintattr_t bg, size_t *out_w,
 %    const char *fmt, ...);
@@ -649,7 +650,7 @@
 	% int tb_send(const char *buf, size_t nbuf);
 :- pred tb_send(string::in, uint::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_send(string::in, int::out, uint::in) is det.
+:- impure pred tb_send(string::in, uint::in, int::out) is det.
 
 % int tb_sendf(const char *fmt, ...);
 % Again, not implemented.
@@ -732,628 +733,628 @@
 
 /* ASCII key constants (tb_event.key) */
 
-:- pragma foreign_proc("C", tb_key_ctrl_tilde = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_TILDE;").
+:- pragma foreign_proc("C", tb_key_ctrl_tilde = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_TILDE;").
 :- pragma inline(tb_key_ctrl_tilde/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_2 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_2;").
+:- pragma foreign_proc("C", tb_key_ctrl_2 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_2;").
 :- pragma inline(tb_key_ctrl_2/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_a = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_A;").
+:- pragma foreign_proc("C", tb_key_ctrl_a = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_A;").
 :- pragma inline(tb_key_ctrl_a/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_b = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_B;").
+:- pragma foreign_proc("C", tb_key_ctrl_b = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_B;").
 :- pragma inline(tb_key_ctrl_b/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_c = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_C;").
+:- pragma foreign_proc("C", tb_key_ctrl_c = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_C;").
 :- pragma inline(tb_key_ctrl_c/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_d = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_D;").
+:- pragma foreign_proc("C", tb_key_ctrl_d = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_D;").
 :- pragma inline(tb_key_ctrl_d/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_e = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_E;").
+:- pragma foreign_proc("C", tb_key_ctrl_e = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_E;").
 :- pragma inline(tb_key_ctrl_e/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_f = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_F;").
+:- pragma foreign_proc("C", tb_key_ctrl_f = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_F;").
 :- pragma inline(tb_key_ctrl_f/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_g = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_G;").
+:- pragma foreign_proc("C", tb_key_ctrl_g = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_G;").
 :- pragma inline(tb_key_ctrl_g/0).
 
-:- pragma foreign_proc("C", tb_key_backspace = R,
-	[will_not_call_mercury], "R = TB_KEY_BACKSPACE;").
+:- pragma foreign_proc("C", tb_key_backspace = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_BACKSPACE;").
 :- pragma inline(tb_key_backspace/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_h = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_H;").
+:- pragma foreign_proc("C", tb_key_ctrl_h = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_H;").
 :- pragma inline(tb_key_ctrl_h/0).
 
-:- pragma foreign_proc("C", tb_key_tab = R,
-	[will_not_call_mercury], "R = TB_KEY_TAB;").
+:- pragma foreign_proc("C", tb_key_tab = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_TAB;").
 :- pragma inline(tb_key_tab/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_i = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_I;").
+:- pragma foreign_proc("C", tb_key_ctrl_i = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_I;").
 :- pragma inline(tb_key_ctrl_i/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_j = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_J;").
+:- pragma foreign_proc("C", tb_key_ctrl_j = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_J;").
 :- pragma inline(tb_key_ctrl_j/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_k = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_K;").
+:- pragma foreign_proc("C", tb_key_ctrl_k = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_K;").
 :- pragma inline(tb_key_ctrl_k/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_l = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_L;").
+:- pragma foreign_proc("C", tb_key_ctrl_l = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_L;").
 :- pragma inline(tb_key_ctrl_l/0).
 
-:- pragma foreign_proc("C", tb_key_enter = R,
-	[will_not_call_mercury], "R = TB_KEY_ENTER;").
+:- pragma foreign_proc("C", tb_key_enter = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ENTER;").
 :- pragma inline(tb_key_enter/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_m = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_M;").
+:- pragma foreign_proc("C", tb_key_ctrl_m = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_M;").
 :- pragma inline(tb_key_ctrl_m/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_n = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_N;").
+:- pragma foreign_proc("C", tb_key_ctrl_n = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_N;").
 :- pragma inline(tb_key_ctrl_n/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_o = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_O;").
+:- pragma foreign_proc("C", tb_key_ctrl_o = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_O;").
 :- pragma inline(tb_key_ctrl_o/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_p = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_P;").
+:- pragma foreign_proc("C", tb_key_ctrl_p = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_P;").
 :- pragma inline(tb_key_ctrl_p/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_q = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_Q;").
+:- pragma foreign_proc("C", tb_key_ctrl_q = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_Q;").
 :- pragma inline(tb_key_ctrl_q/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_r = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_R;").
+:- pragma foreign_proc("C", tb_key_ctrl_r = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_R;").
 :- pragma inline(tb_key_ctrl_r/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_s = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_S;").
+:- pragma foreign_proc("C", tb_key_ctrl_s = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_S;").
 :- pragma inline(tb_key_ctrl_s/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_t = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_T;").
+:- pragma foreign_proc("C", tb_key_ctrl_t = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_T;").
 :- pragma inline(tb_key_ctrl_t/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_u = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_U;").
+:- pragma foreign_proc("C", tb_key_ctrl_u = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_U;").
 :- pragma inline(tb_key_ctrl_u/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_v = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_V;").
+:- pragma foreign_proc("C", tb_key_ctrl_v = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_V;").
 :- pragma inline(tb_key_ctrl_v/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_w = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_W;").
+:- pragma foreign_proc("C", tb_key_ctrl_w = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_W;").
 :- pragma inline(tb_key_ctrl_w/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_x = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_X;").
+:- pragma foreign_proc("C", tb_key_ctrl_x = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_X;").
 :- pragma inline(tb_key_ctrl_x/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_y = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_Y;").
+:- pragma foreign_proc("C", tb_key_ctrl_y = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_Y;").
 :- pragma inline(tb_key_ctrl_y/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_z = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_Z;").
+:- pragma foreign_proc("C", tb_key_ctrl_z = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_Z;").
 :- pragma inline(tb_key_ctrl_z/0).
 
-:- pragma foreign_proc("C", tb_key_esc = R,
-	[will_not_call_mercury], "R = TB_KEY_ESC;").
+:- pragma foreign_proc("C", tb_key_esc = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ESC;").
 :- pragma inline(tb_key_esc/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_lsq_bracket = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_LSQ_BRACKET;").
+:- pragma foreign_proc("C", tb_key_ctrl_lsq_bracket = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_LSQ_BRACKET;").
 :- pragma inline(tb_key_ctrl_lsq_bracket/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_3 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_3;").
+:- pragma foreign_proc("C", tb_key_ctrl_3 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_3;").
 :- pragma inline(tb_key_ctrl_3/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_4 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_4;").
+:- pragma foreign_proc("C", tb_key_ctrl_4 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_4;").
 :- pragma inline(tb_key_ctrl_4/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_backslash = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_BACKSLASH;").
+:- pragma foreign_proc("C", tb_key_ctrl_backslash = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_BACKSLASH;").
 :- pragma inline(tb_key_ctrl_backslash/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_5 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_5;").
+:- pragma foreign_proc("C", tb_key_ctrl_5 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_5;").
 :- pragma inline(tb_key_ctrl_5/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_rsq_bracket = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_RSQ_BRACKET;").
+:- pragma foreign_proc("C", tb_key_ctrl_rsq_bracket = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_RSQ_BRACKET;").
 :- pragma inline(tb_key_ctrl_rsq_bracket/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_6 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_6;").
+:- pragma foreign_proc("C", tb_key_ctrl_6 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_6;").
 :- pragma inline(tb_key_ctrl_6/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_7 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_7;").
+:- pragma foreign_proc("C", tb_key_ctrl_7 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_7;").
 :- pragma inline(tb_key_ctrl_7/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_slash = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_SLASH;").
+:- pragma foreign_proc("C", tb_key_ctrl_slash = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_SLASH;").
 :- pragma inline(tb_key_ctrl_slash/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_underscore = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_UNDERSCORE;").
+:- pragma foreign_proc("C", tb_key_ctrl_underscore = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_UNDERSCORE;").
 :- pragma inline(tb_key_ctrl_underscore/0).
 
-:- pragma foreign_proc("C", tb_key_space = R,
-	[will_not_call_mercury], "R = TB_KEY_SPACE;").
+:- pragma foreign_proc("C", tb_key_space = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_SPACE;").
 :- pragma inline(tb_key_space/0).
 
-:- pragma foreign_proc("C", tb_key_backspace2 = R,
-	[will_not_call_mercury], "R = TB_KEY_BACKSPACE2;").
+:- pragma foreign_proc("C", tb_key_backspace2 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_BACKSPACE2;").
 :- pragma inline(tb_key_backspace2/0).
 
-:- pragma foreign_proc("C", tb_key_ctrl_8 = R,
-	[will_not_call_mercury], "R = TB_KEY_CTRL_8;").
+:- pragma foreign_proc("C", tb_key_ctrl_8 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_CTRL_8;").
 :- pragma inline(tb_key_ctrl_8/0).
 
-:- pragma foreign_proc("C", tb_key_i(I) = R,
-	[will_not_call_mercury], "R = tb_key_i(I);").
+:- pragma foreign_proc("C", tb_key_i(I::in) = (R::out),
+	[will_not_call_mercury, promise_pure], "R = tb_key_i(I);").
 :- pragma inline(tb_key_i/1).
 
 
 /* terminal-dependent key constants (tb_event.key) and terminfo capabilities */
-:- pragma foreign_proc("C", tb_key_f1 = R,
-	[will_not_call_mercury], "R = TB_KEY_F1;").
+:- pragma foreign_proc("C", tb_key_f1 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F1;").
 :- pragma inline(tb_key_f1/0).
 
-:- pragma foreign_proc("C", tb_key_f2 = R,
-	[will_not_call_mercury], "R = TB_KEY_F2;").
+:- pragma foreign_proc("C", tb_key_f2 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F2;").
 :- pragma inline(tb_key_f2/0).
 
-:- pragma foreign_proc("C", tb_key_f3 = R,
-	[will_not_call_mercury], "R = TB_KEY_F3;").
+:- pragma foreign_proc("C", tb_key_f3 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F3;").
 :- pragma inline(tb_key_f3/0).
 
-:- pragma foreign_proc("C", tb_key_f4 = R,
-	[will_not_call_mercury], "R = TB_KEY_F4;").
+:- pragma foreign_proc("C", tb_key_f4 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F4;").
 :- pragma inline(tb_key_f4/0).
 
-:- pragma foreign_proc("C", tb_key_f5 = R,
-	[will_not_call_mercury], "R = TB_KEY_F5;").
+:- pragma foreign_proc("C", tb_key_f5 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F5;").
 :- pragma inline(tb_key_f5/0).
 
-:- pragma foreign_proc("C", tb_key_f6 = R,
-	[will_not_call_mercury], "R = TB_KEY_F6;").
+:- pragma foreign_proc("C", tb_key_f6 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F6;").
 :- pragma inline(tb_key_f6/0).
 
-:- pragma foreign_proc("C", tb_key_f7 = R,
-	[will_not_call_mercury], "R = TB_KEY_F7;").
+:- pragma foreign_proc("C", tb_key_f7 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F7;").
 :- pragma inline(tb_key_f7/0).
 
-:- pragma foreign_proc("C", tb_key_f8 = R,
-	[will_not_call_mercury], "R = TB_KEY_F8;").
+:- pragma foreign_proc("C", tb_key_f8 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F8;").
 :- pragma inline(tb_key_f8/0).
 
-:- pragma foreign_proc("C", tb_key_f9 = R,
-	[will_not_call_mercury], "R = TB_KEY_F9;").
+:- pragma foreign_proc("C", tb_key_f9 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F9;").
 :- pragma inline(tb_key_f9/0).
 
-:- pragma foreign_proc("C", tb_key_f10 = R,
-	[will_not_call_mercury], "R = TB_KEY_F10;").
+:- pragma foreign_proc("C", tb_key_f10 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F10;").
 :- pragma inline(tb_key_f10/0).
 
-:- pragma foreign_proc("C", tb_key_f11 = R,
-	[will_not_call_mercury], "R = TB_KEY_F11;").
+:- pragma foreign_proc("C", tb_key_f11 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F11;").
 :- pragma inline(tb_key_f11/0).
 
-:- pragma foreign_proc("C", tb_key_f12 = R,
-	[will_not_call_mercury], "R = TB_KEY_F12;").
+:- pragma foreign_proc("C", tb_key_f12 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_F12;").
 :- pragma inline(tb_key_f12/0).
 
-:- pragma foreign_proc("C", tb_key_insert = R,
-	[will_not_call_mercury], "R = TB_KEY_INSERT;").
+:- pragma foreign_proc("C", tb_key_insert = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_INSERT;").
 :- pragma inline(tb_key_insert/0).
 
-:- pragma foreign_proc("C", tb_key_delete = R,
-	[will_not_call_mercury], "R = TB_KEY_DELETE;").
+:- pragma foreign_proc("C", tb_key_delete = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_DELETE;").
 :- pragma inline(tb_key_delete/0).
 
-:- pragma foreign_proc("C", tb_key_home = R,
-	[will_not_call_mercury], "R = TB_KEY_HOME;").
+:- pragma foreign_proc("C", tb_key_home = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_HOME;").
 :- pragma inline(tb_key_home/0).
 
-:- pragma foreign_proc("C", tb_key_end = R,
-	[will_not_call_mercury], "R = TB_KEY_END;").
+:- pragma foreign_proc("C", tb_key_end = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_END;").
 :- pragma inline(tb_key_end/0).
 
-:- pragma foreign_proc("C", tb_key_pgup = R,
-	[will_not_call_mercury], "R = TB_KEY_PGUP;").
+:- pragma foreign_proc("C", tb_key_pgup = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_PGUP;").
 :- pragma inline(tb_key_pgup/0).
 
-:- pragma foreign_proc("C", tb_key_pgdn = R,
-	[will_not_call_mercury], "R = TB_KEY_PGDN;").
+:- pragma foreign_proc("C", tb_key_pgdn = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_PGDN;").
 :- pragma inline(tb_key_pgdn/0).
 
-:- pragma foreign_proc("C", tb_key_arrow_up = R,
-	[will_not_call_mercury], "R = TB_KEY_ARROW_UP;").
+:- pragma foreign_proc("C", tb_key_arrow_up = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ARROW_UP;").
 :- pragma inline(tb_key_arrow_up/0).
 
-:- pragma foreign_proc("C", tb_key_arrow_down = R,
-	[will_not_call_mercury], "R = TB_KEY_ARROW_DOWN;").
+:- pragma foreign_proc("C", tb_key_arrow_down = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ARROW_DOWN;").
 :- pragma inline(tb_key_arrow_down/0).
 
-:- pragma foreign_proc("C", tb_key_arrow_left = R,
-	[will_not_call_mercury], "R = TB_KEY_ARROW_LEFT;").
+:- pragma foreign_proc("C", tb_key_arrow_left = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ARROW_LEFT;").
 :- pragma inline(tb_key_arrow_left/0).
 
-:- pragma foreign_proc("C", tb_key_arrow_right = R,
-	[will_not_call_mercury], "R = TB_KEY_ARROW_RIGHT;").
+:- pragma foreign_proc("C", tb_key_arrow_right = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_ARROW_RIGHT;").
 :- pragma inline(tb_key_arrow_right/0).
 
-:- pragma foreign_proc("C", tb_key_back_tab = R,
-	[will_not_call_mercury], "R = TB_KEY_BACK_TAB;").
+:- pragma foreign_proc("C", tb_key_back_tab = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_BACK_TAB;").
 :- pragma inline(tb_key_back_tab/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_left = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_LEFT;").
+:- pragma foreign_proc("C", tb_key_mouse_left = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_LEFT;").
 :- pragma inline(tb_key_mouse_left/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_right = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_RIGHT;").
+:- pragma foreign_proc("C", tb_key_mouse_right = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_RIGHT;").
 :- pragma inline(tb_key_mouse_right/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_middle = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_MIDDLE;").
+:- pragma foreign_proc("C", tb_key_mouse_middle = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_MIDDLE;").
 :- pragma inline(tb_key_mouse_middle/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_release = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_RELEASE;").
+:- pragma foreign_proc("C", tb_key_mouse_release = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_RELEASE;").
 :- pragma inline(tb_key_mouse_release/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_wheel_up = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_WHEEL_UP;").
+:- pragma foreign_proc("C", tb_key_mouse_wheel_up = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_WHEEL_UP;").
 :- pragma inline(tb_key_mouse_wheel_up/0).
 
-:- pragma foreign_proc("C", tb_key_mouse_wheel_down = R,
-	[will_not_call_mercury], "R = TB_KEY_MOUSE_WHEEL_DOWN;").
+:- pragma foreign_proc("C", tb_key_mouse_wheel_down = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_KEY_MOUSE_WHEEL_DOWN;").
 :- pragma inline(tb_key_mouse_wheel_down/0).
 
-:- pragma foreign_proc("C", tb_cap_f1 = R,
-	[will_not_call_mercury], "R = TB_CAP_F1;").
+:- pragma foreign_proc("C", tb_cap_f1 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F1;").
 :- pragma inline(tb_cap_f1/0).
 
-:- pragma foreign_proc("C", tb_cap_f2 = R,
-	[will_not_call_mercury], "R = TB_CAP_F2;").
+:- pragma foreign_proc("C", tb_cap_f2 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F2;").
 :- pragma inline(tb_cap_f2/0).
 
-:- pragma foreign_proc("C", tb_cap_f3 = R,
-	[will_not_call_mercury], "R = TB_CAP_F3;").
+:- pragma foreign_proc("C", tb_cap_f3 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F3;").
 :- pragma inline(tb_cap_f3/0).
 
-:- pragma foreign_proc("C", tb_cap_f4 = R,
-	[will_not_call_mercury], "R = TB_CAP_F4;").
+:- pragma foreign_proc("C", tb_cap_f4 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F4;").
 :- pragma inline(tb_cap_f4/0).
 
-:- pragma foreign_proc("C", tb_cap_f5 = R,
-	[will_not_call_mercury], "R = TB_CAP_F5;").
+:- pragma foreign_proc("C", tb_cap_f5 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F5;").
 :- pragma inline(tb_cap_f5/0).
 
-:- pragma foreign_proc("C", tb_cap_f6 = R,
-	[will_not_call_mercury], "R = TB_CAP_F6;").
+:- pragma foreign_proc("C", tb_cap_f6 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F6;").
 :- pragma inline(tb_cap_f6/0).
 
-:- pragma foreign_proc("C", tb_cap_f7 = R,
-	[will_not_call_mercury], "R = TB_CAP_F7;").
+:- pragma foreign_proc("C", tb_cap_f7 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F7;").
 :- pragma inline(tb_cap_f7/0).
 
-:- pragma foreign_proc("C", tb_cap_f8 = R,
-	[will_not_call_mercury], "R = TB_CAP_F8;").
+:- pragma foreign_proc("C", tb_cap_f8 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F8;").
 :- pragma inline(tb_cap_f8/0).
 
-:- pragma foreign_proc("C", tb_cap_f9 = R,
-	[will_not_call_mercury], "R = TB_CAP_F9;").
+:- pragma foreign_proc("C", tb_cap_f9 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F9;").
 :- pragma inline(tb_cap_f9/0).
 
-:- pragma foreign_proc("C", tb_cap_f10 = R,
-	[will_not_call_mercury], "R = TB_CAP_F10;").
+:- pragma foreign_proc("C", tb_cap_f10 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F10;").
 :- pragma inline(tb_cap_f10/0).
 
-:- pragma foreign_proc("C", tb_cap_f11 = R,
-	[will_not_call_mercury], "R = TB_CAP_F11;").
+:- pragma foreign_proc("C", tb_cap_f11 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F11;").
 :- pragma inline(tb_cap_f11/0).
 
-:- pragma foreign_proc("C", tb_cap_f12 = R,
-	[will_not_call_mercury], "R = TB_CAP_F12;").
+:- pragma foreign_proc("C", tb_cap_f12 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_F12;").
 :- pragma inline(tb_cap_f12/0).
 
-:- pragma foreign_proc("C", tb_cap_insert = R,
-	[will_not_call_mercury], "R = TB_CAP_INSERT;").
+:- pragma foreign_proc("C", tb_cap_insert = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_INSERT;").
 :- pragma inline(tb_cap_insert/0).
 
-:- pragma foreign_proc("C", tb_cap_delete = R,
-	[will_not_call_mercury], "R = TB_CAP_DELETE;").
+:- pragma foreign_proc("C", tb_cap_delete = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_DELETE;").
 :- pragma inline(tb_cap_delete/0).
 
-:- pragma foreign_proc("C", tb_cap_home = R,
-	[will_not_call_mercury], "R = TB_CAP_HOME;").
+:- pragma foreign_proc("C", tb_cap_home = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_HOME;").
 :- pragma inline(tb_cap_home/0).
 
-:- pragma foreign_proc("C", tb_cap_end = R,
-	[will_not_call_mercury], "R = TB_CAP_END;").
+:- pragma foreign_proc("C", tb_cap_end = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_END;").
 :- pragma inline(tb_cap_end/0).
 
-:- pragma foreign_proc("C", tb_cap_pgup = R,
-	[will_not_call_mercury], "R = TB_CAP_PGUP;").
+:- pragma foreign_proc("C", tb_cap_pgup = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_PGUP;").
 :- pragma inline(tb_cap_pgup/0).
 
-:- pragma foreign_proc("C", tb_cap_pgdn = R,
-	[will_not_call_mercury], "R = TB_CAP_PGDN;").
+:- pragma foreign_proc("C", tb_cap_pgdn = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_PGDN;").
 :- pragma inline(tb_cap_pgdn/0).
 
-:- pragma foreign_proc("C", tb_cap_arrow_up = R,
-	[will_not_call_mercury], "R = TB_CAP_ARROW_UP;").
+:- pragma foreign_proc("C", tb_cap_arrow_up = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ARROW_UP;").
 :- pragma inline(tb_cap_arrow_up/0).
 
-:- pragma foreign_proc("C", tb_cap_arrow_down = R,
-	[will_not_call_mercury], "R = TB_CAP_ARROW_DOWN;").
+:- pragma foreign_proc("C", tb_cap_arrow_down = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ARROW_DOWN;").
 :- pragma inline(tb_cap_arrow_down/0).
 
-:- pragma foreign_proc("C", tb_cap_arrow_left = R,
-	[will_not_call_mercury], "R = TB_CAP_ARROW_LEFT;").
+:- pragma foreign_proc("C", tb_cap_arrow_left = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ARROW_LEFT;").
 :- pragma inline(tb_cap_arrow_left/0).
 
-:- pragma foreign_proc("C", tb_cap_arrow_right = R,
-	[will_not_call_mercury], "R = TB_CAP_ARROW_RIGHT;").
+:- pragma foreign_proc("C", tb_cap_arrow_right = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ARROW_RIGHT;").
 :- pragma inline(tb_cap_arrow_right/0).
 
-:- pragma foreign_proc("C", tb_cap_back_tab = R,
-	[will_not_call_mercury], "R = TB_CAP_BACK_TAB;").
+:- pragma foreign_proc("C", tb_cap_back_tab = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_BACK_TAB;").
 :- pragma inline(tb_cap_back_tab/0).
 
-:- pragma foreign_proc("C", tb_cap__count_keys = R,
-	[will_not_call_mercury], "R = TB_CAP__COUNT_KEYS;").
-:- pragma inline(tb_cap__count_keys/0).
+:- pragma foreign_proc("C", tb_cap_count_keys = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP__COUNT_KEYS;").
+:- pragma inline(tb_cap_count_keys/0).
 
-:- pragma foreign_proc("C", tb_cap_enter_ca = R,
-	[will_not_call_mercury], "R = TB_CAP_ENTER_CA;").
+:- pragma foreign_proc("C", tb_cap_enter_ca = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ENTER_CA;").
 :- pragma inline(tb_cap_enter_ca/0).
 
-:- pragma foreign_proc("C", tb_cap_exit_ca = R,
-	[will_not_call_mercury], "R = TB_CAP_EXIT_CA;").
+:- pragma foreign_proc("C", tb_cap_exit_ca = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_EXIT_CA;").
 :- pragma inline(tb_cap_exit_ca/0).
 
-:- pragma foreign_proc("C", tb_cap_show_cursor = R,
-	[will_not_call_mercury], "R = TB_CAP_SHOW_CURSOR;").
+:- pragma foreign_proc("C", tb_cap_show_cursor = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_SHOW_CURSOR;").
 :- pragma inline(tb_cap_show_cursor/0).
 
-:- pragma foreign_proc("C", tb_cap_hide_cursor = R,
-	[will_not_call_mercury], "R = TB_CAP_HIDE_CURSOR;").
+:- pragma foreign_proc("C", tb_cap_hide_cursor = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_HIDE_CURSOR;").
 :- pragma inline(tb_cap_hide_cursor/0).
 
-:- pragma foreign_proc("C", tb_cap_clear_screen = R,
-	[will_not_call_mercury], "R = TB_CAP_CLEAR_SCREEN;").
+:- pragma foreign_proc("C", tb_cap_clear_screen = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_CLEAR_SCREEN;").
 :- pragma inline(tb_cap_clear_screen/0).
 
-:- pragma foreign_proc("C", tb_cap_sgr0 = R,
-	[will_not_call_mercury], "R = TB_CAP_SGR0;").
+:- pragma foreign_proc("C", tb_cap_sgr0 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_SGR0;").
 :- pragma inline(tb_cap_sgr0/0).
 
-:- pragma foreign_proc("C", tb_cap_underline = R,
-	[will_not_call_mercury], "R = TB_CAP_UNDERLINE;").
+:- pragma foreign_proc("C", tb_cap_underline = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_UNDERLINE;").
 :- pragma inline(tb_cap_underline/0).
 
-:- pragma foreign_proc("C", tb_cap_bold = R,
-	[will_not_call_mercury], "R = TB_CAP_BOLD;").
+:- pragma foreign_proc("C", tb_cap_bold = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_BOLD;").
 :- pragma inline(tb_cap_bold/0).
 
-:- pragma foreign_proc("C", tb_cap_blink = R,
-	[will_not_call_mercury], "R = TB_CAP_BLINK;").
+:- pragma foreign_proc("C", tb_cap_blink = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_BLINK;").
 :- pragma inline(tb_cap_blink/0).
 
-:- pragma foreign_proc("C", tb_cap_italic = R,
-	[will_not_call_mercury], "R = TB_CAP_ITALIC;").
+:- pragma foreign_proc("C", tb_cap_italic = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ITALIC;").
 :- pragma inline(tb_cap_italic/0).
 
-:- pragma foreign_proc("C", tb_cap_reverse = R,
-	[will_not_call_mercury], "R = TB_CAP_REVERSE;").
+:- pragma foreign_proc("C", tb_cap_reverse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_REVERSE;").
 :- pragma inline(tb_cap_reverse/0).
 
-:- pragma foreign_proc("C", tb_cap_enter_keypad = R,
-	[will_not_call_mercury], "R = TB_CAP_ENTER_KEYPAD;").
+:- pragma foreign_proc("C", tb_cap_enter_keypad = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_ENTER_KEYPAD;").
 :- pragma inline(tb_cap_enter_keypad/0).
 
-:- pragma foreign_proc("C", tb_cap_exit_keypad = R,
-	[will_not_call_mercury], "R = TB_CAP_EXIT_KEYPAD;").
+:- pragma foreign_proc("C", tb_cap_exit_keypad = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_EXIT_KEYPAD;").
 :- pragma inline(tb_cap_exit_keypad/0).
 
-:- pragma foreign_proc("C", tb_cap_dim = R,
-	[will_not_call_mercury], "R = TB_CAP_DIM;").
+:- pragma foreign_proc("C", tb_cap_dim = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_DIM;").
 :- pragma inline(tb_cap_dim/0).
 
-:- pragma foreign_proc("C", tb_cap_invisible = R,
-	[will_not_call_mercury], "R = TB_CAP_INVISIBLE;").
+:- pragma foreign_proc("C", tb_cap_invisible = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP_INVISIBLE;").
 :- pragma inline(tb_cap_invisible/0).
 
-:- pragma foreign_proc("C", tb_cap__count = R,
-	[will_not_call_mercury], "R = TB_CAP__COUNT;").
-:- pragma inline(tb_cap__count/0).
+:- pragma foreign_proc("C", tb_cap_count = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CAP__COUNT;").
+:- pragma inline(tb_cap_count/0).
 
 /* Some hard-coded caps */
-:- pragma foreign_proc("C", tb_hardcap_enter_mouse = R,
-	[will_not_call_mercury], "R = TB_HARDCAP_ENTER_MOUSE;").
+:- pragma foreign_proc("C", tb_hardcap_enter_mouse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_ENTER_MOUSE;").
 :- pragma inline(tb_hardcap_enter_mouse/0).
 
-:- pragma foreign_proc("C", tb_hardcap_exit_mouse = R,
-	[will_not_call_mercury], "R = TB_HARDCAP_EXIT_MOUSE;").
+:- pragma foreign_proc("C", tb_hardcap_exit_mouse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_EXIT_MOUSE;").
 :- pragma inline(tb_hardcap_exit_mouse/0).
 
-:- pragma foreign_proc("C", tb_hardcap_strikeout = R,
-	[will_not_call_mercury], "R = TB_HARDCAP_STRIKEOUT;").
+:- pragma foreign_proc("C", tb_hardcap_strikeout = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_STRIKEOUT;").
 :- pragma inline(tb_hardcap_strikeout/0).
 
-:- pragma foreign_proc("C", tb_hardcap_underline_2 = R,
-	[will_not_call_mercury], "R = TB_HARDCAP_UNDERLINE_2;").
+:- pragma foreign_proc("C", tb_hardcap_underline_2 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_UNDERLINE_2;").
 :- pragma inline(tb_hardcap_underline_2/0).
 
-:- pragma foreign_proc("C", tb_hardcap_overline = R,
-	[will_not_call_mercury], "R = TB_HARDCAP_OVERLINE;").
+:- pragma foreign_proc("C", tb_hardcap_overline = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_OVERLINE;").
 :- pragma inline(tb_hardcap_overline/0).
 
 /* Colors (numeric) and attributes (bitwise) (tb_cell.fg, tb_cell.bg) */
-:- pragma foreign_proc("C", tb_default = R,
-	[will_not_call_mercury], "R = TB_DEFAULT;").
+:- pragma foreign_proc("C", tb_default = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_DEFAULT;").
 :- pragma inline(tb_default/0).
 
-:- pragma foreign_proc("C", tb_black = R,
-	[will_not_call_mercury], "R = TB_BLACK;").
+:- pragma foreign_proc("C", tb_black = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_BLACK;").
 :- pragma inline(tb_black/0).
 
-:- pragma foreign_proc("C", tb_red = R,
-	[will_not_call_mercury], "R = TB_RED;").
+:- pragma foreign_proc("C", tb_red = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_RED;").
 :- pragma inline(tb_red/0).
 
-:- pragma foreign_proc("C", tb_green = R,
-	[will_not_call_mercury], "R = TB_GREEN;").
+:- pragma foreign_proc("C", tb_green = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_GREEN;").
 :- pragma inline(tb_green/0).
 
-:- pragma foreign_proc("C", tb_yellow = R,
-	[will_not_call_mercury], "R = TB_YELLOW;").
+:- pragma foreign_proc("C", tb_yellow = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_YELLOW;").
 :- pragma inline(tb_yellow/0).
 
-:- pragma foreign_proc("C", tb_blue = R,
-	[will_not_call_mercury], "R = TB_BLUE;").
+:- pragma foreign_proc("C", tb_blue = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_BLUE;").
 :- pragma inline(tb_blue/0).
 
-:- pragma foreign_proc("C", tb_magenta = R,
-	[will_not_call_mercury], "R = TB_MAGENTA;").
+:- pragma foreign_proc("C", tb_magenta = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_MAGENTA;").
 :- pragma inline(tb_magenta/0).
 
-:- pragma foreign_proc("C", tb_cyan = R,
-	[will_not_call_mercury], "R = TB_CYAN;").
+:- pragma foreign_proc("C", tb_cyan = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_CYAN;").
 :- pragma inline(tb_cyan/0).
 
-:- pragma foreign_proc("C", tb_white = R,
-	[will_not_call_mercury], "R = TB_WHITE;").
+:- pragma foreign_proc("C", tb_white = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_WHITE;").
 :- pragma inline(tb_white/0).
 
-:- pragma foreign_proc("C", tb_bold = R,
-	[will_not_call_mercury], "R = TB_BOLD;").
+:- pragma foreign_proc("C", tb_bold = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_BOLD;").
 :- pragma inline(tb_bold/0).
 
-:- pragma foreign_proc("C", tb_underline = R,
-	[will_not_call_mercury], "R = TB_UNDERLINE;").
+:- pragma foreign_proc("C", tb_underline = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_UNDERLINE;").
 :- pragma inline(tb_underline/0).
 
-:- pragma foreign_proc("C", tb_reverse = R,
-	[will_not_call_mercury], "R = TB_REVERSE;").
+:- pragma foreign_proc("C", tb_reverse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_REVERSE;").
 :- pragma inline(tb_reverse/0).
 
-:- pragma foreign_proc("C", tb_italic = R,
-	[will_not_call_mercury], "R = TB_ITALIC;").
+:- pragma foreign_proc("C", tb_italic = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ITALIC;").
 :- pragma inline(tb_italic/0).
 
-:- pragma foreign_proc("C", tb_blink = R,
-	[will_not_call_mercury], "R = TB_BLINK;").
+:- pragma foreign_proc("C", tb_blink = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_BLINK;").
 :- pragma inline(tb_blink/0).
 
-:- pragma foreign_proc("C", tb_hi_black = R,
-	[will_not_call_mercury], "R = TB_HI_BLACK;").
+:- pragma foreign_proc("C", tb_hi_black = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_HI_BLACK;").
 :- pragma inline(tb_hi_black/0).
 
-:- pragma foreign_proc("C", tb_bright = R,
-	[will_not_call_mercury], "R = TB_BRIGHT;").
+:- pragma foreign_proc("C", tb_bright = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_BRIGHT;").
 :- pragma inline(tb_bright/0).
 
-:- pragma foreign_proc("C", tb_dim = R,
-	[will_not_call_mercury], "R = TB_DIM;").
+:- pragma foreign_proc("C", tb_dim = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_DIM;").
 :- pragma inline(tb_dim/0).
 
 /* Event types (tb_event.type) */
-:- pragma foreign_proc("C", tb_event_key = R,
-	[will_not_call_mercury], "R = TB_EVENT_KEY;").
+:- pragma foreign_proc("C", tb_event_key = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_EVENT_KEY;").
 :- pragma inline(tb_event_key/0).
 
-:- pragma foreign_proc("C", tb_event_resize = R,
-	[will_not_call_mercury], "R = TB_EVENT_RESIZE;").
+:- pragma foreign_proc("C", tb_event_resize = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_EVENT_RESIZE;").
 :- pragma inline(tb_event_resize/0).
 
-:- pragma foreign_proc("C", tb_event_mouse = R,
-	[will_not_call_mercury], "R = TB_EVENT_MOUSE;").
+:- pragma foreign_proc("C", tb_event_mouse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_EVENT_MOUSE;").
 :- pragma inline(tb_event_mouse/0).
 
 /* key modifiers (bitwise) (tb_event.mod) */
-:- pragma foreign_proc("C", tb_mod_alt = R,
-	[will_not_call_mercury], "R = TB_MOD_ALT;").
+:- pragma foreign_proc("C", tb_mod_alt = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_MOD_ALT;").
 :- pragma inline(tb_mod_alt/0).
 
-:- pragma foreign_proc("C", tb_mod_ctrl = R,
-	[will_not_call_mercury], "R = TB_MOD_CTRL;").
+:- pragma foreign_proc("C", tb_mod_ctrl = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_MOD_CTRL;").
 :- pragma inline(tb_mod_ctrl/0).
 
-:- pragma foreign_proc("C", tb_mod_shift = R,
-	[will_not_call_mercury], "R = TB_MOD_SHIFT;").
+:- pragma foreign_proc("C", tb_mod_shift = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_MOD_SHIFT;").
 :- pragma inline(tb_mod_shift/0).
 
-:- pragma foreign_proc("C", tb_mod_motion = R,
-	[will_not_call_mercury], "R = TB_MOD_MOTION;").
+:- pragma foreign_proc("C", tb_mod_motion = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_MOD_MOTION;").
 :- pragma inline(tb_mod_motion/0).
 
 /* input modes (bitwise) (tb_set_input_mode) */
-:- pragma foreign_proc("C", tb_input_current = R,
-	[will_not_call_mercury], "R = TB_INPUT_CURRENT;").
+:- pragma foreign_proc("C", tb_input_current = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_INPUT_CURRENT;").
 :- pragma inline(tb_input_current/0).
 
-:- pragma foreign_proc("C", tb_input_esc = R,
-	[will_not_call_mercury], "R = TB_INPUT_ESC;").
+:- pragma foreign_proc("C", tb_input_esc = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_INPUT_ESC;").
 :- pragma inline(tb_input_esc/0).
 
-:- pragma foreign_proc("C", tb_input_alt = R,
-	[will_not_call_mercury], "R = TB_INPUT_ALT;").
+:- pragma foreign_proc("C", tb_input_alt = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_INPUT_ALT;").
 :- pragma inline(tb_input_alt/0).
 
-:- pragma foreign_proc("C", tb_input_mouse = R,
-	[will_not_call_mercury], "R = TB_INPUT_MOUSE;").
+:- pragma foreign_proc("C", tb_input_mouse = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_INPUT_MOUSE;").
 :- pragma inline(tb_input_mouse/0).
 
 /* output modes (tb_set_output_mode) */
-:- pragma foreign_proc("C", tb_output_current = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_CURRENT;").
+:- pragma foreign_proc("C", tb_output_current = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_CURRENT;").
 :- pragma inline(tb_output_current/0).
 
-:- pragma foreign_proc("C", tb_output_normal = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_NORMAL;").
+:- pragma foreign_proc("C", tb_output_normal = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_NORMAL;").
 :- pragma inline(tb_output_normal/0).
 
-:- pragma foreign_proc("C", tb_output_256 = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_256;").
+:- pragma foreign_proc("C", tb_output_256 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_256;").
 :- pragma inline(tb_output_256/0).
 
-:- pragma foreign_proc("C", tb_output_216 = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_216;").
+:- pragma foreign_proc("C", tb_output_216 = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_216;").
 :- pragma inline(tb_output_216/0).
 
-:- pragma foreign_proc("C", tb_output_grayscale = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_GRAYSCALE;").
+:- pragma foreign_proc("C", tb_output_grayscale = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_GRAYSCALE;").
 :- pragma inline(tb_output_grayscale/0).
 
-:- pragma foreign_proc("C", tb_output_truecolor = R,
-	[will_not_call_mercury], "R = TB_OUTPUT_TRUECOLOR;").
+:- pragma foreign_proc("C", tb_output_truecolor = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OUTPUT_TRUECOLOR;").
 :- pragma inline(tb_output_truecolor/0).
 
 /* Common function return values unless otherwise noted.
@@ -1362,104 +1363,104 @@
  * attempt reinitializing by freeing memory, invoking tb_shutdown, then
  * tb_init.
  */
-:- pragma foreign_proc("C", tb_ok = R,
-	[will_not_call_mercury], "R = TB_OK;").
+:- pragma foreign_proc("C", tb_ok = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_OK;").
 :- pragma inline(tb_ok/0).
 
-:- pragma foreign_proc("C", tb_err = R,
-	[will_not_call_mercury], "R = TB_ERR;").
+:- pragma foreign_proc("C", tb_err = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR;").
 :- pragma inline(tb_err/0).
 
-:- pragma foreign_proc("C", tb_err_need_more = R,
-	[will_not_call_mercury], "R = TB_ERR_NEED_MORE;").
+:- pragma foreign_proc("C", tb_err_need_more = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_NEED_MORE;").
 :- pragma inline(tb_err_need_more/0).
 
-:- pragma foreign_proc("C", tb_err_init_already = R,
-	[will_not_call_mercury], "R = TB_ERR_INIT_ALREADY;").
+:- pragma foreign_proc("C", tb_err_init_already = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_INIT_ALREADY;").
 :- pragma inline(tb_err_init_already/0).
 
-:- pragma foreign_proc("C", tb_err_init_open = R,
-	[will_not_call_mercury], "R = TB_ERR_INIT_OPEN;").
+:- pragma foreign_proc("C", tb_err_init_open = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_INIT_OPEN;").
 :- pragma inline(tb_err_init_open/0).
 
-:- pragma foreign_proc("C", tb_err_mem = R,
-	[will_not_call_mercury], "R = TB_ERR_MEM;").
+:- pragma foreign_proc("C", tb_err_mem = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_MEM;").
 :- pragma inline(tb_err_mem/0).
 
-:- pragma foreign_proc("C", tb_err_no_event = R,
-	[will_not_call_mercury], "R = TB_ERR_NO_EVENT;").
+:- pragma foreign_proc("C", tb_err_no_event = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_NO_EVENT;").
 :- pragma inline(tb_err_no_event/0).
 
-:- pragma foreign_proc("C", tb_err_no_term = R,
-	[will_not_call_mercury], "R = TB_ERR_NO_TERM;").
+:- pragma foreign_proc("C", tb_err_no_term = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_NO_TERM;").
 :- pragma inline(tb_err_no_term/0).
 
-:- pragma foreign_proc("C", tb_err_not_init = R,
-	[will_not_call_mercury], "R = TB_ERR_NOT_INIT;").
+:- pragma foreign_proc("C", tb_err_not_init = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_NOT_INIT;").
 :- pragma inline(tb_err_not_init/0).
 
-:- pragma foreign_proc("C", tb_err_out_of_bounds = R,
-	[will_not_call_mercury], "R = TB_ERR_OUT_OF_BOUNDS;").
+:- pragma foreign_proc("C", tb_err_out_of_bounds = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_OUT_OF_BOUNDS;").
 :- pragma inline(tb_err_out_of_bounds/0).
 
-:- pragma foreign_proc("C", tb_err_read = R,
-	[will_not_call_mercury], "R = TB_ERR_READ;").
+:- pragma foreign_proc("C", tb_err_read = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_READ;").
 :- pragma inline(tb_err_read/0).
 
-:- pragma foreign_proc("C", tb_err_resize_ioctl = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_IOCTL;").
+:- pragma foreign_proc("C", tb_err_resize_ioctl = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_IOCTL;").
 :- pragma inline(tb_err_resize_ioctl/0).
 
-:- pragma foreign_proc("C", tb_err_resize_pipe = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_PIPE;").
+:- pragma foreign_proc("C", tb_err_resize_pipe = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_PIPE;").
 :- pragma inline(tb_err_resize_pipe/0).
 
-:- pragma foreign_proc("C", tb_err_resize_sigaction = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_SIGACTION;").
+:- pragma foreign_proc("C", tb_err_resize_sigaction = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_SIGACTION;").
 :- pragma inline(tb_err_resize_sigaction/0).
 
-:- pragma foreign_proc("C", tb_err_poll = R,
-	[will_not_call_mercury], "R = TB_ERR_POLL;").
+:- pragma foreign_proc("C", tb_err_poll = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_POLL;").
 :- pragma inline(tb_err_poll/0).
 
-:- pragma foreign_proc("C", tb_err_tcgetattr = R,
-	[will_not_call_mercury], "R = TB_ERR_TCGETATTR;").
+:- pragma foreign_proc("C", tb_err_tcgetattr = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_TCGETATTR;").
 :- pragma inline(tb_err_tcgetattr/0).
 
-:- pragma foreign_proc("C", tb_err_tcsetattr = R,
-	[will_not_call_mercury], "R = TB_ERR_TCSETATTR;").
+:- pragma foreign_proc("C", tb_err_tcsetattr = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_TCSETATTR;").
 :- pragma inline(tb_err_tcsetattr/0).
 
-:- pragma foreign_proc("C", tb_err_unsupported_term = R,
-	[will_not_call_mercury], "R = TB_ERR_UNSUPPORTED_TERM;").
+:- pragma foreign_proc("C", tb_err_unsupported_term = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_UNSUPPORTED_TERM;").
 :- pragma inline(tb_err_unsupported_term/0).
 
-:- pragma foreign_proc("C", tb_err_resize_write = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_WRITE;").
+:- pragma foreign_proc("C", tb_err_resize_write = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_WRITE;").
 :- pragma inline(tb_err_resize_write/0).
 
-:- pragma foreign_proc("C", tb_err_resize_poll = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_POLL;").
+:- pragma foreign_proc("C", tb_err_resize_poll = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_POLL;").
 :- pragma inline(tb_err_resize_poll/0).
 
-:- pragma foreign_proc("C", tb_err_resize_read = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_READ;").
+:- pragma foreign_proc("C", tb_err_resize_read = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_READ;").
 :- pragma inline(tb_err_resize_read/0).
 
-:- pragma foreign_proc("C", tb_err_resize_sscanf = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_SSCANF;").
+:- pragma foreign_proc("C", tb_err_resize_sscanf = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_SSCANF;").
 :- pragma inline(tb_err_resize_sscanf/0).
 
-:- pragma foreign_proc("C", tb_err_cap_collision = R,
-	[will_not_call_mercury], "R = TB_ERR_CAP_COLLISION;").
+:- pragma foreign_proc("C", tb_err_cap_collision = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_CAP_COLLISION;").
 :- pragma inline(tb_err_cap_collision/0).
 
-:- pragma foreign_proc("C", tb_err_select = R,
-	[will_not_call_mercury], "R = TB_ERR_SELECT;").
+:- pragma foreign_proc("C", tb_err_select = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_SELECT;").
 :- pragma inline(tb_err_select/0).
 
-:- pragma foreign_proc("C", tb_err_resize_select = R,
-	[will_not_call_mercury], "R = TB_ERR_RESIZE_SELECT;").
+:- pragma foreign_proc("C", tb_err_resize_select = (R::out),
+	[will_not_call_mercury, promise_pure], "R = TB_ERR_RESIZE_SELECT;").
 :- pragma inline(tb_err_resize_select/0).
 
 
@@ -1467,26 +1468,26 @@
 /* tb_cell */
 :- pragma foreign_type("C", tb_cell, "struct tb_cell").
 
-:- pragma foreign_code("C", "static const struct tb_cell new_tb_cell;")
+:- pragma foreign_code("C", "static const struct tb_cell new_tb_cell;").
 
-:- pragma foreign_proc("C", init_tb_cell = C,
-	[will_not_call_mercury], "C = new_tb_cell;").
+:- pragma foreign_proc("C", init_tb_cell = (C::out),
+	[will_not_call_mercury, promise_pure], "C = new_tb_cell;").
 :- pragma inline(init_tb_cell/0).
 
-:- pragma foreign_proc("C", tb_cell(Ch, Fg, Bg) = Cell,
-	[will_not_call_mercury], "Cell = { Ch, Fg, Bg };").
+:- pragma foreign_proc("C", tb_cell(Ch::in, Fg::in, Bg::in) = (Cell::out),
+	[will_not_call_mercury, promise_pure], "Cell = { Ch, Fg, Bg };").
 :- pragma inline(tb_cell/3).
 
-:- pragma foreign_proc("C", ch(Cell) = Ch, [will_not_call_mercury], 
-	"Ch = Cell.ch;").
+:- pragma foreign_proc("C", ch(Cell::in) = (Ch::out), [will_not_call_mercury,
+	promise_pure], "Ch = Cell.ch;").
 :- pragma inline(ch/1).
 
-:- pragma foreign_proc("C", fg(Cell) = Fg, [will_not_call_mercury], 
-	"Fg = Cell.fg;").
+:- pragma foreign_proc("C", fg(Cell::in) = (Fg::out), [will_not_call_mercury,
+	promise_pure], "Fg = Cell.fg;").
 :- pragma inline(ch/1).
 
-:- pragma foreign_proc("C", bg(Cell) = Bg, [will_not_call_mercury], 
-	"Bg = Cell.bg;").
+:- pragma foreign_proc("C", bg(Cell::in) = (Bg::out), [will_not_call_mercury,
+	promise_pure], "Bg = Cell.bg;").
 :- pragma inline(ch/1).
 
 'ch :='(C0, Ch) = tb_cell(Ch, fg(C0), bg(C0)).
@@ -1496,118 +1497,118 @@
 /* tb_event */
 :- pragma foreign_type("C", tb_event, "struct tb_event").
 
-:- pragma foreign_code("C", "static const struct tb_event new_tb_event;")
+:- pragma foreign_code("C", "static const struct tb_event new_tb_event;").
 
-:- pragma foreign_proc("C", init_tb_event = C,
-	[will_not_call_mercury], "C = new_tb_event;").
+:- pragma foreign_proc("C", init_tb_event = (C::out),
+	[will_not_call_mercury, promise_pure], "C = new_tb_event;").
 :- pragma inline(init_tb_event/0).
 
 init_tb_event(init_tb_event).
 
-:- pragma foreign_proc("C", event_type(Event) = I, [will_not_call_mercury], 
-	"I = Event.type;").
+:- pragma foreign_proc("C", event_type(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure], "I = Event.type;").
 :- pragma inline(event_type/1).
 	
-:- pragma foreign_proc("C", event_mod(Event) = I, [will_not_call_mercury], 
-	"I = Event.mod;").
+:- pragma foreign_proc("C", event_mod(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure], "I = Event.mod;").
 :- pragma inline(event_mod/1).
 	
-:- pragma foreign_proc("C", event_key(Event) = I, [will_not_call_mercury], 
-	"I = Event.key;").
+:- pragma foreign_proc("C", event_key(Event::in) = (I::out),
+	[will_not_call_mercury, promise_pure], "I = Event.key;").
 :- pragma inline(event_key/1).
 	
-:- pragma foreign_proc("C", event_ch(Event) = I, [will_not_call_mercury], 
-	"I = Event.ch;").
+:- pragma foreign_proc("C", event_ch(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure], "I = Event.ch;").
 :- pragma inline(event_ch/1).
 
-:- pragma foreign_proc("C", event_w(Event) = I, [will_not_call_mercury], 
-	"I = Event.w;").
+:- pragma foreign_proc("C", event_w(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure], "I = Event.w;").
 :- pragma inline(event_w/1).
 	
-:- pragma foreign_proc("C", event_h(Event) = I, [will_not_call_mercury], 
-	"I = Event.h;").
+:- pragma foreign_proc("C", event_h(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure], "I = Event.h;").
 :- pragma inline(event_h/1).
 	
-:- pragma foreign_proc("C", event_x(Event) = I, [will_not_call_mercury], 
-	"I = Event.x;").
+:- pragma foreign_proc("C", event_x(Event::in) = (I::out),
+	[will_not_call_mercury, promise_pure], "I = Event.x;").
 :- pragma inline(event_x/1).
 	
-:- pragma foreign_proc("C", event_y(Event) = I, [will_not_call_mercury], 
-	"I = Event.y;").
+:- pragma foreign_proc("C", event_y(Event::in) = (I::out), 
+	[will_not_call_mercury, promise_pure],"I = Event.y;").
 :- pragma inline(event_y/1).
 	
 
-:- pragma foreign_proc("C", tb_init(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_init(Err::out), [will_not_call_mercury],
 	"Err = tb_init();").
 :- pragma inline(tb_init/1).
 
 tb_init(Err, !IO) :- impure tb_init(Err).
 :- pragma promise_pure(tb_init/3).
 
-:- pragma foreign_proc("C", tb_init_file(Path, Err), [will_not_call_mercury],
-	"Err = tb_init_file(Path);").
+:- pragma foreign_proc("C", tb_init_file(Path::in, Err::out), 
+	[will_not_call_mercury], "Err = tb_init_file(Path);").
 :- pragma inline(tb_init_file/2).
 
-:- tb_init_file(Path, Err, !IO) :- impure tb_init_file(Path, Err).
-:- pragma promise_pure(tb_file/4).
+tb_init_file(Path, Err, !IO) :- impure tb_init_file(Path, Err).
+:- pragma promise_pure(tb_init_file/4).
 
-:- pragma foreign_proc("C", tb_init_fd(Ttyfd, Err), [will_not_call_mercury],
-	"Err = tb_init_fd(Ttyfd);").
+:- pragma foreign_proc("C", tb_init_fd(Ttyfd::in, Err::out), 
+	[will_not_call_mercury], "Err = tb_init_fd(Ttyfd);").
 :- pragma inline(tb_init_fd/2).
 
-:- tb_init_fd(Ttyfd, Err, !IO) :- impure tb_init_file(Ttyfd, Err).
+tb_init_fd(Ttyfd, Err, !IO) :- impure tb_init_fd(Ttyfd, Err).
 :- pragma promise_pure(tb_fd/4).
 
-:- pragma foreign_proc("C", tb_init_rwfd(Rfd, Wfd, Err), 
+:- pragma foreign_proc("C", tb_init_rwfd(Rfd::in, Wfd::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_init_rwfd(Rfd, Wfd);").
 :- pragma inline(tb_init_rwfd/3).
 
-:- tb_init_rwfd(Rfd, Wfd, Err, !IO) :- impure tb_init_rwfd(Rfd, Wfd, Err).
+tb_init_rwfd(Rfd, Wfd, Err, !IO) :- impure tb_init_rwfd(Rfd, Wfd, Err).
 :- pragma promise_pure(tb_rwfd/5).
 
-:- pragma foreign_proc("C", tb_shutdown(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_shutdown(Err::out), [will_not_call_mercury],
 	"Err = tb_shutdown();").
 :- pragma inline(tb_shutdown/1).
 
-:- tb_shutdown(Err, !IO) :- impure tb_shutdown(Err).
+tb_shutdown(Err, !IO) :- impure tb_shutdown(Err).
 :- pragma promise_pure(tb_shutdown/3).
 
-:- pragma foreign_proc("C", tb_width = W), 
+:- pragma foreign_proc("C", tb_width = (W::out), 
 	[promise_semipure, will_not_call_mercury], "W = tb_width();").
 :- pragma inline(tb_width/0).
 
 tb_width(W, !IO) :- semipure W = tb_width.
 :- pragma promise_pure(tb_width/3).
 
-:- pragma foreign_proc("C", tb_height = H), 
+:- pragma foreign_proc("C", tb_height = (H::out), 
 	[promise_semipure, will_not_call_mercury], "H = tb_height();").
 :- pragma inline(tb_height/0).
 
 tb_height(H, !IO) :- semipure H = tb_height.
 :- pragma promise_pure(tb_height/3).
 
-:- pragma foreign_proc("C", tb_clear(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_clear(Err::out), [will_not_call_mercury],
 	"Err = tb_clear();").
 :- pragma inline(tb_clear/1).
 
 tb_clear(Err, !IO) :- impure tb_clear(Err).
 :- pragma promise_pure(tb_clear/3).
 
-:- pragma foreign_proc("C", tb_set_clear_attrs(Fg, Bg, Err), 
+:- pragma foreign_proc("C", tb_set_clear_attrs(Fg::in, Bg::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_set_clear_attrs(Fg, Bg);").
 :- pragma inline(tb_set_clear_attrs/3).
 
 tb_set_clear_attrs(Fg, Bg, Err, !IO) :- impure tb_set_clear_attrs(Fg, Bg, Err).
 :- pragma promise_pure(tb_set_clear_attrs/5).
 
-:- pragma foreign_proc("C", tb_present(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_present(Err::out), [will_not_call_mercury],
 	"Err = tb_present();").
 :- pragma inline(tb_present/1).
 
 tb_present(Err, !IO) :- impure tb_present(Err).
 :- pragma promise_pure(tb_present/3).
 
-:- pragma foreign_proc("C", tb_invalidate(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_invalidate(Err::out), [will_not_call_mercury],
 	"Err = tb_invalidate();").
 :- pragma inline(tb_invalidate/1).
 
@@ -1615,115 +1616,120 @@ tb_invalidate(Err, !IO) :- impure tb_invalidate(Err).
 :- pragma promise_pure(tb_invalidate/3).
 
 
-:- pragma foreign_proc("C", tb_set_cursor(Cx, Cy, Err), 
+:- pragma foreign_proc("C", tb_set_cursor(Cx::in, Cy::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_set_cursor(Cx, Cy);").
 :- pragma inline(tb_set_cursor/3).
 
 tb_set_cursor(Cx, Cy, Err, !IO) :- impure tb_set_cursor(Cx, Cy, Err).
 :- pragma promise_pure(tb_set_cursor/5).
 
-:- pragma foreign_proc("C", tb_hide_cursor(Err), [will_not_call_mercury],
+:- pragma foreign_proc("C", tb_hide_cursor(Err::out), [will_not_call_mercury],
 	"Err = tb_hide_cursor();").
 :- pragma inline(tb_hide_cursor/1).
 
 tb_hide_cursor(Err, !IO) :- impure tb_hide_cursor(Err).
 :- pragma promise_pure(tb_hide_cursor/3).
 
-:- pragma foreign_proc("C", tb_set_cell(X, Y, Ch, Fg, Bg, Err), 
-	[will_not_call_mercury], "Err = tb_set_cell(X, Y, Ch, Fg, Bg);").
+:- pragma foreign_proc("C", tb_set_cell(X::in, Y::in, Ch::in, Fg::in, Bg::in, 
+	Err::out), [will_not_call_mercury], 
+	"Err = tb_set_cell(X, Y, Ch, Fg, Bg);").
 :- pragma inline(tb_set_cell/6).
 
 tb_set_cell(X, Y, Ch, Fg, Bg, Err, !IO) 
 	:- impure tb_set_cell(X, Y, Ch, Fg, Bg, Err).
 :- pragma promise_pure(tb_set_cell/8).
 
-:- pragma foreign_proc("C", tb_set_input_mode(Mode, Err), 
+:- pragma foreign_proc("C", tb_set_input_mode(Mode::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_set_input_mode(Mode);").
 	
 tb_set_input_mode(Mode, Err, !IO) :- impure tb_set_input_mode(Mode, Err).
 :- pragma promise_pure(tb_set_input_mode/4).
 
-:- pragma foreign_proc("C", tb_set_output_mode_mode(Mode, Err), 
+:- pragma foreign_proc("C", tb_set_output_mode(Mode::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_set_output_mode_mode(Mode);").
 	
-tb_set_output_mode_mode(Mode, Err, !IO) 
-	:- impure tb_set_output_mode_mode(Mode, Err).
-:- pragma promise_pure(tb_set_output_mode_mode/4).
+tb_set_output_mode(Mode, Err, !IO) 
+	:- impure tb_set_output_mode(Mode, Err).
+:- pragma promise_pure(tb_set_output_mode/4).
 
-:- pragma foreign_proc("C", tb_peek_event(Event, Time, Err), 
+:- pragma foreign_proc("C", tb_peek_event(Event::in, Time::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_peek_event(&Event, Time);").
 	
 tb_peek_event(Event, Time, Err, !IO) 
 	:- impure tb_peek_event(Event, Time, Err).
 :- pragma promise_pure(tb_peek_event/4).
 
-:- pragma foreign_proc("C", tb_poll_event_event(Event, Err), 
+:- pragma foreign_proc("C", tb_poll_event(Event::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_poll_event_event(&Event);").
 	
-tb_poll_event_event(Event, Err, !IO) 
-	:- impure tb_poll_event_event(Event, Err).
-:- pragma promise_pure(tb_poll_event_event/3).
+tb_poll_event(Event, Err, !IO) 
+	:- impure tb_poll_event(Event, Err).
+:- pragma promise_pure(tb_poll_event/3).
 
-:- pragma foreign_proc("C", tb_print(X, Y, Fg, Bg, String, Err), 
-	[will_not_call_mercury], "Err = tb_print(X, Y, Fg, Bg, String);").
+:- pragma foreign_proc("C", tb_print(X::in, Y::in, Fg::in, Bg::in, String::in,
+	Err::out), [will_not_call_mercury], 
+	"Err = tb_print(X, Y, Fg, Bg, String);").
 
 tb_print(X, Y, Fg, Bg, String, Err, !IO) 
 	:- impure tb_print(X, Y, Fg, Bg, String, Err).
 :- pragma promise_pure(tb_print/8).
 
-:- pragma foreign_proc("C", tb_print_ex(X, Y, Fg, Bg, String, Out, Err), 
-	[will_not_call_mercury], "Err = tb_print_ex(X, Y, Fg, Bg, String, &Out);").
+:- pragma foreign_proc("C", tb_print_ex(X::in, Y::in, Fg::in, Bg::in, 
+	Out::out, String::in, Err::out), [will_not_call_mercury], 
+	"Err = tb_print_ex(X, Y, Fg, Bg, &Out, String);").
 
-tb_print_ex(X, Y, Fg, Bg, String, Out, Err, !IO) 
-	:- impure tb_print_ex(X, Y, Fg, Bg, String, Out, Err).
+tb_print_ex(X, Y, Fg, Bg, Out, String, Err, !IO) 
+	:- impure tb_print_ex(X, Y, Fg, Bg, Out, String, Err).
 :- pragma promise_pure(tb_print_ex/9).
 
-:- pragma foreign_proc("C", tb_send(String, Nbuf, Err), 
+:- pragma foreign_proc("C", tb_send(String::in, Nbuf::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_send(String, Nbuf);").
 
 tb_send(String, Nbuf, Err, !IO) 
 	:- impure tb_send(String, Nbuf, Err).
 :- pragma promise_pure(tb_send/5).
 
-:- pragma foreign_proc("C", tb_utf8_char_length(Char) = Len,
+:- pragma foreign_proc("C", tb_utf8_char_length(Char::in) = (Len::out),
 	[will_not_call_mercury, promise_pure], "Len = tb_utf8_char_length(Char);").
 	
-:- pragma foreign_proc("C", tb_utf8_char_to_unicode(Out, String, Len),
-	[will_not_call_mercury, promise_pure], "
-		Len = tb_utf8_char_to_unicode(Out, String);").
+:- pragma foreign_proc("C", tb_utf8_char_to_unicode(Out::out, String::in, 
+	Len::out), [will_not_call_mercury, promise_pure], 
+	"Len = tb_utf8_char_to_unicode(Out, String);").
 		
-:- pragma foreign_proc("C", tb_utf8_unicode_to_char(Out, C, Len),
+:- pragma foreign_proc("C", tb_utf8_unicode_to_char(Out::out, C::in, Len::out),
 	[will_not_call_mercury, promise_pure], % Can I get away with passing Out?  
 	"Len = tb_utf8_unicode_to_char(Out, C);").
 	
-:- pragma foreign_proc("C", tb_last_errno = Err, [will_not_call_mercury,
-	promise_semipure], "Err = tb_last_errno();").
+tb_utf8_unicode_to_char(C) = Out :- tb_utf8_unicode_to_char(Out, C, _).
+	
+:- pragma foreign_proc("C", tb_last_errno = (Err::out), 
+	[will_not_call_mercury,	promise_semipure], "Err = tb_last_errno();").
 	
 tb_last_errno(Err, !IO) :- semipure Err = tb_last_errno.
 :- pragma promise_pure(tb_last_errno/3).
 
-:- pragma foreign_proc("C", tb_strerror(Err) = String, [will_not_call_mercury,
-	promise_pure], "String = tb_strerror(Err);").
+:- pragma foreign_proc("C", tb_strerror(Err::in) = (String::out),
+	[will_not_call_mercury,	promise_pure], "String = tb_strerror(Err);").
 	
 :- pragma foreign_proc("C", tb_has_truecolor, [will_not_call_mercury,
 	promise_semipure], "SUCCESS_INDICATOR = tb_has_truecolor();").
 	
 tb_has_truecolor(Has, !IO) :-
-	semipure if tb_has_truecolor then Has = yes else Has = no.
+	semipure (if tb_has_truecolor then Has = yes else Has = no).
 :- pragma promise_pure(tb_has_truecolor/3).
 
 :- pragma foreign_proc("C", tb_has_egc, [will_not_call_mercury,
 	promise_semipure], "SUCCESS_INDICATOR = tb_has_egc();").
 	
 tb_has_egc(Has, !IO) :-
-	semipure if tb_has_egc then Has = yes else Has = no.
+	semipure (if tb_has_egc then Has = yes else Has = no).
 :- pragma promise_pure(tb_has_egc/3).
 
 
-:- pragma foreign_proc("C", tb_attr_width = Width,
+:- pragma foreign_proc("C", tb_attr_width = (Width::out),
 	[will_not_call_mercury, promise_pure], "Width = tb_attr_width();").
 :- pragma inline(tb_attr_width/0).
 
-:- pragma foreign_proc("C", tb_version = V,
+:- pragma foreign_proc("C", tb_version = (V::out),
 	[will_not_call_mercury], "V = tb_version();").
 :- pragma inline(tb_version/0).
