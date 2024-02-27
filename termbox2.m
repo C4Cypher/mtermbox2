@@ -332,14 +332,14 @@
 :- pred init_tb_event(tb_event::out) is det.
 :- func init_tb_event = tb_event is det.
 
-:- func type(tb_event) = uint8 is det. /* one of TB_EVENT_* constants */
-:- func mod(tb_event) = uint8 is det. /* bitwise TB_MOD_* constants */
-:- func key(tb_event) = uint16 is det. /* one of TB_KEY_* constants */
-:- func ch(tb_event) = uint32 is det. /* a Unicode codepoint */
-:- func w(tb_event) = uint32 is det. /* resize width */
-:- func h(tb_event) = uint32 is det. /* resize height */
-:- func x(tb_event) = uint32 is det. /* mouse x */
-:- func y(tb_event) = uint32 is det. /* mouse y */
+:- func event_type(tb_event) = uint8 is det. /* one of TB_EVENT_* constants */
+:- func event_mod(tb_event) = uint8 is det. /* bitwise TB_MOD_* constants */
+:- func event_key(tb_event) = uint16 is det. /* one of TB_KEY_* constants */
+:- func event_ch(tb_event) = uint32 is det. /* a Unicode codepoint */
+:- func event_w(tb_event) = uint32 is det. /* resize width */
+:- func event_h(tb_event) = uint32 is det. /* resize height */
+:- func event_x(tb_event) = uint32 is det. /* mouse x */
+:- func event_y(tb_event) = uint32 is det. /* mouse y */
 
 
 /* Initializes the termbox library. This function should be called before any
@@ -352,13 +352,12 @@
 	% int tb_init(void);
 :- pred tb_init(int::out, io::di, io::uo) is det.
 
-:- impure pred tb_init is det.
-:- impure func tb_init = int is det.
+:- impure pred tb_init(int::out) is det.
 
 	% int tb_init_file(const char *path);
 :- pred tb_init_file(string::in, int::out, io::di, io::uo) is det.
 
-:- impure pred tb_init(string::in, int::out) is det.
+:- impure pred tb_init_file(string::in, int::out) is det.
 
 	% int tb_init_fd(int ttyfd);
 :- pred tb_init_fd(int::in, int::out, io::di, io::uo) is det.
@@ -383,14 +382,14 @@
  */
  
 	% int tb_width(void);
-:- pred tb_width(int::out, int::out, io::di, io::uo) is det.
+:- pred tb_width(int::out, io::di, io::uo) is det.
 
-:- semipure pred tb_width(int::out, int::out) is det.
+:- semipure func tb_width = int is det.
 
 	% int tb_height(void);
 :- pred tb_height(int::out, io::di, io::uo) is det.
 
-:- semipure pred tb_height(int::out, int::out) is det.
+:- semipure func tb_height = int is det.
 
 /* Clears the internal back buffer using TB_DEFAULT color or the
  * color/attributes set by tb_set_clear_attrs() function.
@@ -585,7 +584,6 @@
 :- impure pred tb_set_output_mode(int::in, int::out) is det.
 
 
-%% TODO: funcs for builtin output modes
 
 
 
@@ -599,7 +597,7 @@
  */
 
 	% int tb_peek_event(struct tb_event *event, int timeout_ms);
-:- pred tb_peek_event(tb_event::in, tb_event::out, int::in, int::out,
+:- pred tb_peek_event(tb_event::in, int::in, int::out,
 	io::di, io::uo)	is det.
 
 :- impure pred tb_peek_event(tb_event::in, int::in, int::out) is det.
@@ -607,7 +605,7 @@
 /* Same as tb_peek_event except no timeout. */
 	
 	% int tb_poll_event(struct tb_event *event);
-:- pred tb_poll_event(tb_event::in, tb_event::out, int::out, 
+:- pred tb_poll_event(tb_event::in, int::out, 
 	io::di, io::uo) is det. 
 	
 :- impure pred tb_poll_event(tb_event::in, int::out) is det.
@@ -661,7 +659,6 @@
 
 /* Return byte length of codepoint given first byte of UTF-8 sequence (1-6). */
 % int tb_utf8_char_length(char c);
-:- pred tb_utf8_char_length(char::in, int::out, int::out) is det.
 :- func tb_utf8_char_length(char) = int is det. % Ignore error code
 
 /* Convert UTF-8 null-terminated byte sequence to UTF-32 codepoint.
@@ -1467,7 +1464,7 @@
 
 
 
-
+/* tb_cell */
 :- pragma foreign_type("C", tb_cell, "struct tb_cell").
 
 :- pragma foreign_code("C", "static const struct tb_cell new_tb_cell;")
@@ -1496,25 +1493,237 @@
 'fg :='(C0, Fg) = tb_cell(ch(C0), Fg, bg(C0)).
 'bg :='(C0, Bg) = tb_cell(ch(C0), fg(C0), Bg).
 
+/* tb_event */
+:- pragma foreign_type("C", tb_event, "struct tb_event").
+
+:- pragma foreign_code("C", "static const struct tb_event new_tb_event;")
+
+:- pragma foreign_proc("C", init_tb_event = C,
+	[will_not_call_mercury], "C = new_tb_event;").
+:- pragma inline(init_tb_event/0).
+
+init_tb_event(init_tb_event).
+
+:- pragma foreign_proc("C", event_type(Event) = I, [will_not_call_mercury], 
+	"I = Event.type;").
+:- pragma inline(event_type/1).
+	
+:- pragma foreign_proc("C", event_mod(Event) = I, [will_not_call_mercury], 
+	"I = Event.mod;").
+:- pragma inline(event_mod/1).
+	
+:- pragma foreign_proc("C", event_key(Event) = I, [will_not_call_mercury], 
+	"I = Event.key;").
+:- pragma inline(event_key/1).
+	
+:- pragma foreign_proc("C", event_ch(Event) = I, [will_not_call_mercury], 
+	"I = Event.ch;").
+:- pragma inline(event_ch/1).
+
+:- pragma foreign_proc("C", event_w(Event) = I, [will_not_call_mercury], 
+	"I = Event.w;").
+:- pragma inline(event_w/1).
+	
+:- pragma foreign_proc("C", event_h(Event) = I, [will_not_call_mercury], 
+	"I = Event.h;").
+:- pragma inline(event_h/1).
+	
+:- pragma foreign_proc("C", event_x(Event) = I, [will_not_call_mercury], 
+	"I = Event.x;").
+:- pragma inline(event_x/1).
+	
+:- pragma foreign_proc("C", event_y(Event) = I, [will_not_call_mercury], 
+	"I = Event.y;").
+:- pragma inline(event_y/1).
+	
+
+:- pragma foreign_proc("C", tb_init(Err), [will_not_call_mercury],
+	"Err = tb_init();").
+:- pragma inline(tb_init/1).
+
+tb_init(Err, !IO) :- impure tb_init(Err).
+:- pragma promise_pure(tb_init/3).
+
+:- pragma foreign_proc("C", tb_init_file(Path, Err), [will_not_call_mercury],
+	"Err = tb_init_file(Path);").
+:- pragma inline(tb_init_file/2).
+
+:- tb_init_file(Path, Err, !IO) :- impure tb_init_file(Path, Err).
+:- pragma promise_pure(tb_file/4).
+
+:- pragma foreign_proc("C", tb_init_fd(Ttyfd, Err), [will_not_call_mercury],
+	"Err = tb_init_fd(Ttyfd);").
+:- pragma inline(tb_init_fd/2).
+
+:- tb_init_fd(Ttyfd, Err, !IO) :- impure tb_init_file(Ttyfd, Err).
+:- pragma promise_pure(tb_fd/4).
+
+:- pragma foreign_proc("C", tb_init_rwfd(Rfd, Wfd, Err), 
+	[will_not_call_mercury], "Err = tb_init_rwfd(Rfd, Wfd);").
+:- pragma inline(tb_init_rwfd/3).
+
+:- tb_init_rwfd(Rfd, Wfd, Err, !IO) :- impure tb_init_rwfd(Rfd, Wfd, Err).
+:- pragma promise_pure(tb_rwfd/5).
+
+:- pragma foreign_proc("C", tb_shutdown(Err), [will_not_call_mercury],
+	"Err = tb_shutdown();").
+:- pragma inline(tb_shutdown/1).
+
+:- tb_shutdown(Err, !IO) :- impure tb_shutdown(Err).
+:- pragma promise_pure(tb_shutdown/3).
+
+:- pragma foreign_proc("C", tb_width = W), 
+	[promise_semipure, will_not_call_mercury], "W = tb_width();").
+:- pragma inline(tb_width/0).
+
+tb_width(W, !IO) :- semipure W = tb_width.
+:- pragma promise_pure(tb_width/3).
+
+:- pragma foreign_proc("C", tb_height = H), 
+	[promise_semipure, will_not_call_mercury], "H = tb_height();").
+:- pragma inline(tb_height/0).
+
+tb_height(H, !IO) :- semipure H = tb_height.
+:- pragma promise_pure(tb_height/3).
+
+:- pragma foreign_proc("C", tb_clear(Err), [will_not_call_mercury],
+	"Err = tb_clear();").
+:- pragma inline(tb_clear/1).
+
+tb_clear(Err, !IO) :- impure tb_clear(Err).
+:- pragma promise_pure(tb_clear/3).
+
+:- pragma foreign_proc("C", tb_set_clear_attrs(Fg, Bg, Err), 
+	[will_not_call_mercury], "Err = tb_set_clear_attrs(Fg, Bg);").
+:- pragma inline(tb_set_clear_attrs/3).
+
+tb_set_clear_attrs(Fg, Bg, Err, !IO) :- impure tb_set_clear_attrs(Fg, Bg, Err).
+:- pragma promise_pure(tb_set_clear_attrs/5).
+
+:- pragma foreign_proc("C", tb_present(Err), [will_not_call_mercury],
+	"Err = tb_present();").
+:- pragma inline(tb_present/1).
+
+tb_present(Err, !IO) :- impure tb_present(Err).
+:- pragma promise_pure(tb_present/3).
+
+:- pragma foreign_proc("C", tb_invalidate(Err), [will_not_call_mercury],
+	"Err = tb_invalidate();").
+:- pragma inline(tb_invalidate/1).
+
+tb_invalidate(Err, !IO) :- impure tb_invalidate(Err).
+:- pragma promise_pure(tb_invalidate/3).
 
 
+:- pragma foreign_proc("C", tb_set_cursor(Cx, Cy, Err), 
+	[will_not_call_mercury], "Err = tb_set_cursor(Cx, Cy);").
+:- pragma inline(tb_set_cursor/3).
+
+tb_set_cursor(Cx, Cy, Err, !IO) :- impure tb_set_cursor(Cx, Cy, Err).
+:- pragma promise_pure(tb_set_cursor/5).
+
+:- pragma foreign_proc("C", tb_hide_cursor(Err), [will_not_call_mercury],
+	"Err = tb_hide_cursor();").
+:- pragma inline(tb_hide_cursor/1).
+
+tb_hide_cursor(Err, !IO) :- impure tb_hide_cursor(Err).
+:- pragma promise_pure(tb_hide_cursor/3).
+
+:- pragma foreign_proc("C", tb_set_cell(X, Y, Ch, Fg, Bg, Err), 
+	[will_not_call_mercury], "Err = tb_set_cell(X, Y, Ch, Fg, Bg);").
+:- pragma inline(tb_set_cell/6).
+
+tb_set_cell(X, Y, Ch, Fg, Bg, Err, !IO) 
+	:- impure tb_set_cell(X, Y, Ch, Fg, Bg, Err).
+:- pragma promise_pure(tb_set_cell/8).
+
+:- pragma foreign_proc("C", tb_set_input_mode(Mode, Err), 
+	[will_not_call_mercury], "Err = tb_set_input_mode(Mode);").
+	
+tb_set_input_mode(Mode, Err, !IO) :- impure tb_set_input_mode(Mode, Err).
+:- pragma promise_pure(tb_set_input_mode/4).
+
+:- pragma foreign_proc("C", tb_set_output_mode_mode(Mode, Err), 
+	[will_not_call_mercury], "Err = tb_set_output_mode_mode(Mode);").
+	
+tb_set_output_mode_mode(Mode, Err, !IO) 
+	:- impure tb_set_output_mode_mode(Mode, Err).
+:- pragma promise_pure(tb_set_output_mode_mode/4).
+
+:- pragma foreign_proc("C", tb_peek_event(Event, Time, Err), 
+	[will_not_call_mercury], "Err = tb_peek_event(&Event, Time);").
+	
+tb_peek_event(Event, Time, Err, !IO) 
+	:- impure tb_peek_event(Event, Time, Err).
+:- pragma promise_pure(tb_peek_event/4).
+
+:- pragma foreign_proc("C", tb_poll_event_event(Event, Err), 
+	[will_not_call_mercury], "Err = tb_poll_event_event(&Event);").
+	
+tb_poll_event_event(Event, Err, !IO) 
+	:- impure tb_poll_event_event(Event, Err).
+:- pragma promise_pure(tb_poll_event_event/3).
+
+:- pragma foreign_proc("C", tb_print(X, Y, Fg, Bg, String, Err), 
+	[will_not_call_mercury], "Err = tb_print(X, Y, Fg, Bg, String);").
+
+tb_print(X, Y, Fg, Bg, String, Err, !IO) 
+	:- impure tb_print(X, Y, Fg, Bg, String, Err).
+:- pragma promise_pure(tb_print/8).
+
+:- pragma foreign_proc("C", tb_print_ex(X, Y, Fg, Bg, String, Out, Err), 
+	[will_not_call_mercury], "Err = tb_print_ex(X, Y, Fg, Bg, String, &Out);").
+
+tb_print_ex(X, Y, Fg, Bg, String, Out, Err, !IO) 
+	:- impure tb_print_ex(X, Y, Fg, Bg, String, Out, Err).
+:- pragma promise_pure(tb_print_ex/9).
+
+:- pragma foreign_proc("C", tb_send(String, Nbuf, Err), 
+	[will_not_call_mercury], "Err = tb_send(String, Nbuf);").
+
+tb_send(String, Nbuf, Err, !IO) 
+	:- impure tb_send(String, Nbuf, Err).
+:- pragma promise_pure(tb_send/5).
+
+:- pragma foreign_proc("C", tb_utf8_char_length(Char) = Len,
+	[will_not_call_mercury, promise_pure], "Len = tb_utf8_char_length(Char);").
+	
+:- pragma foreign_proc("C", tb_utf8_char_to_unicode(Out, String, Len),
+	[will_not_call_mercury, promise_pure], "
+		Len = tb_utf8_char_to_unicode(Out, String);").
+		
+:- pragma foreign_proc("C", tb_utf8_unicode_to_char(Out, C, Len),
+	[will_not_call_mercury, promise_pure], % Can I get away with passing Out?  
+	"Len = tb_utf8_unicode_to_char(Out, C);").
+	
+:- pragma foreign_proc("C", tb_last_errno = Err, [will_not_call_mercury,
+	promise_semipure], "Err = tb_last_errno();").
+	
+tb_last_errno(Err, !IO) :- semipure Err = tb_last_errno.
+:- pragma promise_pure(tb_last_errno/3).
+
+:- pragma foreign_proc("C", tb_strerror(Err) = String, [will_not_call_mercury,
+	promise_pure], "String = tb_strerror(Err);").
+	
+:- pragma foreign_proc("C", tb_has_truecolor, [will_not_call_mercury,
+	promise_semipure], "SUCCESS_INDICATOR = tb_has_truecolor();").
+	
+tb_has_truecolor(Has, !IO) :-
+	semipure if tb_has_truecolor then Has = yes else Has = no.
+:- pragma promise_pure(tb_has_truecolor/3).
+
+:- pragma foreign_proc("C", tb_has_egc, [will_not_call_mercury,
+	promise_semipure], "SUCCESS_INDICATOR = tb_has_egc();").
+	
+tb_has_egc(Has, !IO) :-
+	semipure if tb_has_egc then Has = yes else Has = no.
+:- pragma promise_pure(tb_has_egc/3).
 
 
-
-
-
-
-
-
-
-
-
-
-
-:- pragma foreign_proc("C", tb_attr_width = R,
-	[will_not_call_mercury], "R = TB_ATTR_WIDTH;").
+:- pragma foreign_proc("C", tb_attr_width = Width,
+	[will_not_call_mercury, promise_pure], "Width = tb_attr_width();").
 :- pragma inline(tb_attr_width/0).
 
-:- pragma foreign_proc("C", tb_version = R,
-	[will_not_call_mercury], "R = TB_VERSION;").
+:- pragma foreign_proc("C", tb_version = V,
+	[will_not_call_mercury], "V = tb_version();").
 :- pragma inline(tb_version/0).
