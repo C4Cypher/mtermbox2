@@ -1197,23 +1197,28 @@
 
 /* Some hard-coded caps */
 :- pragma foreign_proc("C", tb_hardcap_enter_mouse = (R::out),
-	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_ENTER_MOUSE;").
+	[will_not_call_mercury, promise_pure], 
+	"R = (MR_String) TB_HARDCAP_ENTER_MOUSE;").
 :- pragma inline(tb_hardcap_enter_mouse/0).
 
 :- pragma foreign_proc("C", tb_hardcap_exit_mouse = (R::out),
-	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_EXIT_MOUSE;").
+	[will_not_call_mercury, promise_pure], 
+	"R = (MR_String) TB_HARDCAP_EXIT_MOUSE;").
 :- pragma inline(tb_hardcap_exit_mouse/0).
 
 :- pragma foreign_proc("C", tb_hardcap_strikeout = (R::out),
-	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_STRIKEOUT;").
+	[will_not_call_mercury, promise_pure], 
+	"R = (MR_String) TB_HARDCAP_STRIKEOUT;").
 :- pragma inline(tb_hardcap_strikeout/0).
 
 :- pragma foreign_proc("C", tb_hardcap_underline_2 = (R::out),
-	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_UNDERLINE_2;").
+	[will_not_call_mercury, promise_pure], 
+	"R = (MR_String) TB_HARDCAP_UNDERLINE_2;").
 :- pragma inline(tb_hardcap_underline_2/0).
 
 :- pragma foreign_proc("C", tb_hardcap_overline = (R::out),
-	[will_not_call_mercury, promise_pure], "R = TB_HARDCAP_OVERLINE;").
+	[will_not_call_mercury, promise_pure], 
+	"R = (MR_String) TB_HARDCAP_OVERLINE;").
 :- pragma inline(tb_hardcap_overline/0).
 
 /* Colors (numeric) and attributes (bitwise) (tb_cell.fg, tb_cell.bg) */
@@ -1475,7 +1480,8 @@
 :- pragma inline(init_tb_cell/0).
 
 :- pragma foreign_proc("C", tb_cell(Ch::in, Fg::in, Bg::in) = (Cell::out),
-	[will_not_call_mercury, promise_pure], "Cell = { Ch, Fg, Bg };").
+	[will_not_call_mercury, promise_pure], 
+	"struct tb_cell new_cell = { Ch, Fg, Bg }; Cell = new_cell;").
 :- pragma inline(tb_cell/3).
 
 :- pragma foreign_proc("C", ch(Cell::in) = (Ch::out), [will_not_call_mercury,
@@ -1557,14 +1563,14 @@ tb_init_file(Path, Err, !IO) :- impure tb_init_file(Path, Err).
 :- pragma inline(tb_init_fd/2).
 
 tb_init_fd(Ttyfd, Err, !IO) :- impure tb_init_fd(Ttyfd, Err).
-:- pragma promise_pure(tb_fd/4).
+:- pragma promise_pure(tb_init_fd/4).
 
 :- pragma foreign_proc("C", tb_init_rwfd(Rfd::in, Wfd::in, Err::out), 
 	[will_not_call_mercury], "Err = tb_init_rwfd(Rfd, Wfd);").
 :- pragma inline(tb_init_rwfd/3).
 
 tb_init_rwfd(Rfd, Wfd, Err, !IO) :- impure tb_init_rwfd(Rfd, Wfd, Err).
-:- pragma promise_pure(tb_rwfd/5).
+:- pragma promise_pure(tb_init_rwfd/5).
 
 :- pragma foreign_proc("C", tb_shutdown(Err::out), [will_not_call_mercury],
 	"Err = tb_shutdown();").
@@ -1646,7 +1652,7 @@ tb_set_input_mode(Mode, Err, !IO) :- impure tb_set_input_mode(Mode, Err).
 :- pragma promise_pure(tb_set_input_mode/4).
 
 :- pragma foreign_proc("C", tb_set_output_mode(Mode::in, Err::out), 
-	[will_not_call_mercury], "Err = tb_set_output_mode_mode(Mode);").
+	[will_not_call_mercury], "Err = tb_set_output_mode(Mode);").
 	
 tb_set_output_mode(Mode, Err, !IO) 
 	:- impure tb_set_output_mode(Mode, Err).
@@ -1657,14 +1663,14 @@ tb_set_output_mode(Mode, Err, !IO)
 	
 tb_peek_event(Event, Time, Err, !IO) 
 	:- impure tb_peek_event(Event, Time, Err).
-:- pragma promise_pure(tb_peek_event/4).
+:- pragma promise_pure(tb_peek_event/5).
 
 :- pragma foreign_proc("C", tb_poll_event(Event::in, Err::out), 
-	[will_not_call_mercury], "Err = tb_poll_event_event(&Event);").
+	[will_not_call_mercury], "Err = tb_poll_event(&Event);").
 	
 tb_poll_event(Event, Err, !IO) 
 	:- impure tb_poll_event(Event, Err).
-:- pragma promise_pure(tb_poll_event/3).
+:- pragma promise_pure(tb_poll_event/4).
 
 :- pragma foreign_proc("C", tb_print(X::in, Y::in, Fg::in, Bg::in, String::in,
 	Err::out), [will_not_call_mercury], 
@@ -1694,7 +1700,7 @@ tb_send(String, Nbuf, Err, !IO)
 	
 :- pragma foreign_proc("C", tb_utf8_char_to_unicode(Out::out, String::in, 
 	Len::out), [will_not_call_mercury, promise_pure], 
-	"Len = tb_utf8_char_to_unicode(Out, String);").
+	"Len = tb_utf8_char_to_unicode(&Out, String);").
 		
 :- pragma foreign_proc("C", tb_utf8_unicode_to_char(Out::out, C::in, Len::out),
 	[will_not_call_mercury, promise_pure], % Can I get away with passing Out?  
@@ -1709,20 +1715,21 @@ tb_last_errno(Err, !IO) :- semipure Err = tb_last_errno.
 :- pragma promise_pure(tb_last_errno/3).
 
 :- pragma foreign_proc("C", tb_strerror(Err::in) = (String::out),
-	[will_not_call_mercury,	promise_pure], "String = tb_strerror(Err);").
+	[will_not_call_mercury,	promise_pure], 
+	"String = (MR_String) tb_strerror(Err);").
 	
 :- pragma foreign_proc("C", tb_has_truecolor, [will_not_call_mercury,
 	promise_semipure], "SUCCESS_INDICATOR = tb_has_truecolor();").
 	
 tb_has_truecolor(Has, !IO) :-
-	semipure (if tb_has_truecolor then Has = yes else Has = no).
+	if semipure tb_has_truecolor then Has = yes else Has = no.
 :- pragma promise_pure(tb_has_truecolor/3).
 
 :- pragma foreign_proc("C", tb_has_egc, [will_not_call_mercury,
 	promise_semipure], "SUCCESS_INDICATOR = tb_has_egc();").
 	
 tb_has_egc(Has, !IO) :-
-	semipure (if tb_has_egc then Has = yes else Has = no).
+	if semipure tb_has_egc then Has = yes else Has = no.
 :- pragma promise_pure(tb_has_egc/3).
 
 
@@ -1731,5 +1738,5 @@ tb_has_egc(Has, !IO) :-
 :- pragma inline(tb_attr_width/0).
 
 :- pragma foreign_proc("C", tb_version = (V::out),
-	[will_not_call_mercury], "V = tb_version();").
+	[will_not_call_mercury, promise_pure], "V = (MR_String) tb_version();").
 :- pragma inline(tb_version/0).
